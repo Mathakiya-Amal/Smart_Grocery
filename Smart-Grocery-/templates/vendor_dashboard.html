@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vendor Dashboard – Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{"primary":"#13ec13"},fontFamily:{"display":["Work Sans"]}}}}</script>
+<style>
+body{font-family:'Work Sans',sans-serif}
+.sidebar-link.active{background:rgba(19,236,19,0.15);color:#13ec13;border-left:3px solid #13ec13}
+.sidebar-link:not(.active):hover{background:rgba(255,255,255,0.05)}
+.stat-card{background:linear-gradient(135deg,#1a2e1a,#0d1f0d)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.4s ease-out forwards}
+option { background-color: #0d1f0d; color: #fff; padding: 10px; }
+select:focus { border-color: #13ec13 !important; }
+</style>
+</head>
+<body class="bg-[#0a150a] text-white min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-64 bg-[#0d1f0d] border-r border-white/10 flex flex-col shrink-0 sticky top-0 h-screen overflow-y-auto">
+  <div class="p-6 border-b border-white/10">
+    <a href="/" class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-black text-lg">store</span>
+      </div>
+      <div>
+        <p class="font-black text-sm uppercase tracking-tight">Smart<span class="text-primary">Grocery</span></p>
+        <p class="text-[10px] text-white/40 uppercase tracking-widest">Vendor Panel</p>
+      </div>
+    </a>
+  </div>
+
+  <div class="p-4 border-b border-white/10">
+    <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+      <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary">person</span>
+      </div>
+      <div class="min-w-0">
+        <p class="font-bold text-sm truncate">{{ user }}</p>
+        <span class="text-[10px] font-bold uppercase bg-primary/20 text-primary px-2 py-0.5 rounded-full">Vendor</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="p-3 flex-1 space-y-1">
+    <p class="text-[10px] uppercase tracking-widest text-white/30 px-3 py-2 font-bold">Dashboard</p>
+    <a href="/vendor" class="sidebar-link {% if active=='overview' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">dashboard</span> Overview
+    </a>
+    <p class="text-[10px] uppercase tracking-widest text-white/30 px-3 py-2 font-bold mt-4">Products</p>
+    <a href="/vendor/products" class="sidebar-link {% if active=='products' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">inventory_2</span> My Products
+    </a>
+    <a href="/vendor/products/add" class="sidebar-link {% if active=='add_product' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">add_circle</span> Add Product
+    </a>
+    <p class="text-[10px] uppercase tracking-widest text-white/30 px-3 py-2 font-bold mt-4">Sales</p>
+    <a href="/vendor/orders" class="sidebar-link {% if active=='orders' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">receipt_long</span> Orders
+    </a>
+  </nav>
+
+  <div class="p-4 border-t border-white/10 space-y-1">
+    <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all">
+      <span class="material-symbols-outlined text-[20px]">storefront</span> View Store
+    </a>
+    <a href="/logout" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500/10 transition-all">
+      <span class="material-symbols-outlined text-[20px]">logout</span> Sign Out
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+
+  <!-- Topbar -->
+  <header class="sticky top-0 z-30 bg-[#0a150a]/95 backdrop-blur border-b border-white/10 px-8 h-16 flex items-center justify-between">
+    <div>
+      {% if active == 'overview' %}<h1 class="font-bold text-lg">Dashboard Overview</h1>
+      {% elif active == 'products' %}<h1 class="font-bold text-lg">My Products</h1>
+      {% elif active == 'add_product' %}<h1 class="font-bold text-lg">Add New Product</h1>
+      {% elif active == 'edit_product' %}<h1 class="font-bold text-lg">Edit Product</h1>
+      {% elif active == 'orders' %}<h1 class="font-bold text-lg">My Orders</h1>
+      {% endif %}
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/vendor/products/add" class="flex items-center gap-2 bg-primary text-black font-bold px-4 py-2 rounded-lg text-sm hover:brightness-110 transition-all">
+        <span class="material-symbols-outlined text-[18px]">add</span> New Product
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1 p-8 fade-in">
+
+    <!-- OVERVIEW -->
+    {% if active == 'overview' %}
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      <div class="stat-card rounded-2xl p-5 border border-white/10">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings:'FILL' 1">inventory_2</span>
+          </div>
+          <span class="text-[10px] font-bold text-primary/60 uppercase tracking-wider">Products</span>
+        </div>
+        <p class="text-4xl font-black text-primary">{{ total_products }}</p>
+        <p class="text-xs text-white/40 mt-1">Listed in store</p>
+      </div>
+      <div class="stat-card rounded-2xl p-5 border border-white/10">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-blue-400 text-xl" style="font-variation-settings:'FILL' 1">receipt_long</span>
+          </div>
+          <span class="text-[10px] font-bold text-blue-400/60 uppercase tracking-wider">Orders</span>
+        </div>
+        <p class="text-4xl font-black text-blue-400">{{ total_orders }}</p>
+        <p class="text-xs text-white/40 mt-1">Orders received</p>
+      </div>
+      <div class="stat-card rounded-2xl p-5 border border-white/10">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-purple-400 text-xl" style="font-variation-settings:'FILL' 1">shopping_bag</span>
+          </div>
+          <span class="text-[10px] font-bold text-purple-400/60 uppercase tracking-wider">Units Sold</span>
+        </div>
+        <p class="text-4xl font-black text-purple-400">{{ total_units_sold or 0 }}</p>
+        <p class="text-xs text-white/40 mt-1">Total items sold</p>
+      </div>
+      <div class="stat-card rounded-2xl p-5 border border-white/10">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-yellow-400 text-xl" style="font-variation-settings:'FILL' 1">payments</span>
+          </div>
+          <span class="text-[10px] font-bold text-yellow-400/60 uppercase tracking-wider">Revenue</span>
+        </div>
+        <p class="text-3xl font-black text-yellow-400">${{ "%.2f"|format(revenue) }}</p>
+        <p class="text-xs text-white/40 mt-1">Total earned</p>
+      </div>
+    </div>
+
+    <!-- Chart Row -->
+    <div class="bg-[#0d1f0d] rounded-2xl border border-white/10 p-6 mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">monitoring</span>Revenue Trend</h3>
+          <p class="text-xs text-white/40 mt-1">Real-time dynamic data</p>
+        </div>
+        <div class="flex items-center gap-2 bg-white/5 p-1 rounded-xl">
+          <button onclick="updateVendorChart('7d')" id="btn-7d" class="chart-filter px-3 py-1.5 text-xs font-bold rounded-lg bg-primary/20 text-primary transition-all">7 Days</button>
+          <button onclick="updateVendorChart('1m')" id="btn-1m" class="chart-filter px-3 py-1.5 text-xs font-bold rounded-lg text-white/50 hover:text-white transition-all">1 Month</button>
+          <button onclick="updateVendorChart('1y')" id="btn-1y" class="chart-filter px-3 py-1.5 text-xs font-bold rounded-lg text-white/50 hover:text-white transition-all">1 Year</button>
+        </div>
+      </div>
+      <div class="w-full h-64">
+        <canvas id="vendorChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Recent activity row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <!-- Recent Products -->
+      <div class="bg-[#0d1f0d] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
+          <h3 class="font-bold text-sm flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">package_2</span>Recent Products</h3>
+          <a href="/vendor/products" class="text-primary text-xs font-bold hover:underline">View all →</a>
+        </div>
+        <div class="divide-y divide-white/5">
+          {% for p in recent_products %}
+          <div class="flex items-center gap-4 px-6 py-3.5">
+            <div class="w-11 h-11 rounded-xl overflow-hidden bg-white/5 shrink-0">
+              <img src="{{ p.image_url }}" class="w-full h-full object-cover"/>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm truncate">{{ p.name }}</p>
+              <p class="text-xs text-white/40">{{ p.category }}</p>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-primary text-sm">${{ "%.2f"|format(p.price) }}</p>
+              <p class="text-[10px] text-white/40">Stock: {{ p.stock or '—' }}</p>
+            </div>
+          </div>
+          {% else %}
+          <div class="px-6 py-10 text-center text-white/30 text-sm">No products yet. <a href="/vendor/products/add" class="text-primary hover:underline">Add one →</a></div>
+          {% endfor %}
+        </div>
+      </div>
+      <!-- Recent Orders -->
+      <div class="bg-[#0d1f0d] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
+          <h3 class="font-bold text-sm flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-blue-400">receipt_long</span>Recent Orders</h3>
+          <a href="/vendor/orders" class="text-primary text-xs font-bold hover:underline">View all →</a>
+        </div>
+        <div class="divide-y divide-white/5">
+          {% for o in recent_orders %}
+          <div class="flex items-center gap-4 px-6 py-3.5">
+            <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <span class="text-xs font-bold text-primary">#{{ o.id }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm">{{ o.customer_name }}</p>
+              <p class="text-xs text-white/40">{{ o.created_at[:10] }}</p>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-primary text-sm">${{ "%.2f"|format(o.total) }}</p>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full
+                {% if o.status == 'Delivered' %}bg-green-500/20 text-green-400
+                {% elif o.status == 'Out for Delivery' %}bg-blue-500/20 text-blue-400
+                {% elif o.status == 'Preparing' %}bg-yellow-500/20 text-yellow-400
+                {% else %}bg-white/10 text-white/60{% endif %}">{{ o.status }}</span>
+            </div>
+          </div>
+          {% else %}
+          <div class="px-6 py-10 text-center text-white/30 text-sm">No orders yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Top Selling Products -->
+      <div class="bg-[#0d1f0d] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="px-6 py-4 border-b border-white/10 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-yellow-400" style="font-variation-settings:'FILL' 1">emoji_events</span>
+          <h3 class="font-bold text-sm">Top Selling Products</h3>
+        </div>
+        {% if top_products %}
+        <div class="p-4 space-y-3">
+          {% for p in top_products %}
+          {% set max_sold = top_products[0].total_sold if top_products[0].total_sold else 1 %}
+          <div>
+            <div class="flex items-center gap-3 mb-1.5">
+              <div class="w-8 h-8 rounded-lg overflow-hidden bg-white/5 shrink-0">
+                <img src="{{ p.image_url }}" class="w-full h-full object-cover"/>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs font-semibold truncate">{{ p.name }}</p>
+                <p class="text-[10px] text-white/40">{{ p.category }}</p>
+              </div>
+              <div class="text-right shrink-0">
+                <p class="text-xs font-bold text-yellow-400">{{ p.total_sold }} sold</p>
+                <p class="text-[10px] text-white/40">${{ "%.2f"|format(p.revenue) }}</p>
+              </div>
+            </div>
+            <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-yellow-400 to-primary rounded-full transition-all"
+                   style="width: {{ [(p.total_sold / max_sold * 100)|int, 100]|min }}%"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="px-6 py-10 text-center text-white/30 text-sm">
+          <span class="material-symbols-outlined text-4xl text-white/10 block mb-2">bar_chart</span>
+          No sales data yet
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Order Status Breakdown -->
+      <div class="bg-[#0d1f0d] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="px-6 py-4 border-b border-white/10 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-blue-400" style="font-variation-settings:'FILL' 1">donut_large</span>
+          <h3 class="font-bold text-sm">Order Status Breakdown</h3>
+        </div>
+        <div class="p-6 grid grid-cols-2 gap-4">
+          {% set status_styles = {
+            'Confirmed': ('text-white/70', 'bg-white/10'),
+            'Preparing': ('text-yellow-400', 'bg-yellow-500/20'),
+            'Out for Delivery': ('text-blue-400', 'bg-blue-500/20'),
+            'Delivered': ('text-green-400', 'bg-green-500/20')
+          } %}
+          {% set status_icons = {
+            'Confirmed': 'check_circle',
+            'Preparing': 'local_fire_department',
+            'Out for Delivery': 'local_shipping',
+            'Delivered': 'done_all'
+          } %}
+          {% for s in order_status %}
+          {% set style = status_styles.get(s.status, ('text-white/60', 'bg-white/10')) %}
+          {% set icon = status_icons.get(s.status, 'help') %}
+          <div class="rounded-2xl p-4 {{ style[1] }} border border-white/5">
+            <span class="material-symbols-outlined {{ style[0] }} text-2xl block mb-2" style="font-variation-settings:'FILL' 1">{{ icon }}</span>
+            <p class="text-3xl font-black {{ style[0] }}">{{ s.cnt }}</p>
+            <p class="text-xs text-white/40 mt-1 font-medium">{{ s.status }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PRODUCTS LIST -->
+    {% elif active == 'products' %}
+    <div class="flex justify-between items-center mb-6">
+      <p class="text-white/50 text-sm">{{ products|length }} product(s) listed</p>
+      <a href="/vendor/products/add" class="flex items-center gap-2 bg-primary text-black font-bold px-4 py-2 rounded-xl text-sm hover:brightness-110 transition">
+        <span class="material-symbols-outlined text-[18px]">add</span> Add Product
+      </a>
+    </div>
+
+    {% if products %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+      {% for p in products %}
+      <div class="bg-[#0d1f0d] rounded-2xl border border-white/10 overflow-hidden hover:border-primary/30 transition-all group">
+        <div class="relative aspect-video bg-white/5 overflow-hidden">
+          <img src="{{ p.image_url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          <div class="absolute top-3 right-3 flex gap-2">
+            {% if p.badge %}<span class="bg-primary text-black text-[10px] font-bold px-2 py-0.5 rounded uppercase">{{ p.badge }}</span>{% endif %}
+            {% if not p.is_approved %}<span class="bg-yellow-500/80 text-black text-[10px] font-bold px-2 py-0.5 rounded uppercase">Pending</span>{% endif %}
+          </div>
+          <div class="absolute bottom-3 left-3">
+            <p class="font-bold text-white drop-shadow">{{ p.name }}</p>
+            <p class="text-xs text-white/60">{{ p.category }} · {{ p.unit }}</p>
+          </div>
+        </div>
+        <div class="p-4 flex items-center justify-between">
+          <div>
+            <p class="text-xl font-black text-primary">${{ "%.2f"|format(p.price) }}</p>
+            <p class="text-xs text-white/40">Stock: {{ p.stock or '—' }}</p>
+          </div>
+          <div class="flex gap-2">
+            <a href="/vendor/products/edit/{{ p.id }}" class="p-2 rounded-lg bg-white/10 hover:bg-primary/20 text-white/70 hover:text-primary transition-all">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </a>
+            <form method="POST" action="/vendor/products/delete/{{ p.id }}" onsubmit="return confirm('Delete this product?')">
+              <button class="p-2 rounded-lg bg-white/10 hover:bg-red-500/20 text-white/70 hover:text-red-400 transition-all">
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-24 bg-[#0d1f0d] rounded-2xl border border-dashed border-white/10">
+      <span class="material-symbols-outlined text-7xl text-white/10">inventory_2</span>
+      <p class="text-white/40 mt-4">You have no products yet.</p>
+      <a href="/vendor/products/add" class="mt-4 inline-block bg-primary text-black font-bold px-6 py-3 rounded-xl hover:brightness-110 transition">Add Your First Product</a>
+    </div>
+    {% endif %}
+
+
+    <!-- ADD PRODUCT -->
+    {% elif active == 'add_product' %}
+    <div class="max-w-2xl">
+      {% if error %}<div class="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">error</span>{{ error }}</div>{% endif %}
+      <form method="POST" action="/vendor/products/add" class="bg-[#0d1f0d] rounded-2xl border border-white/10 p-6 space-y-5">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Product Name *</label>
+            <input name="name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm" placeholder="e.g. Fresh Organic Broccoli"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Brand *</label>
+            <input name="brand" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm" placeholder="e.g. Veggies Pro"/>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Category *</label>
+            <select name="category" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary outline-none text-sm cursor-pointer">
+              {% for cat in categories %}<option value="{{ cat }}">{{ cat }}</option>{% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Unit *</label>
+            <input name="unit" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm" placeholder="e.g. 500g, 1kg"/>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-5">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Price ($) *</label>
+            <input name="price" type="number" step="0.01" min="0" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm" placeholder="0.00"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Original Price ($)</label>
+            <input name="original_price" type="number" step="0.01" min="0" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm" placeholder="Optional"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Stock</label>
+            <input name="stock" type="number" min="0" value="100" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Image URL</label>
+          <input name="image_url" type="url" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm" placeholder="https://..."/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Badge</label>
+          <select name="badge" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary outline-none text-sm cursor-pointer">
+            <option value="">None</option>
+            <option>Sale</option><option>New</option><option>Organic</option><option>Hot</option>
+          </select>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="bg-primary text-black font-bold px-6 py-3 rounded-xl hover:brightness-110 transition flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">add_circle</span> Add Product
+          </button>
+          <a href="/vendor/products" class="px-6 py-3 rounded-xl border border-white/20 text-white/60 hover:text-white hover:bg-white/5 transition text-sm font-medium">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+
+    <!-- EDIT PRODUCT -->
+    {% elif active == 'edit_product' %}
+    <div class="max-w-2xl">
+      {% if error %}<div class="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">error</span>{{ error }}</div>{% endif %}
+      <form method="POST" class="bg-[#0d1f0d] rounded-2xl border border-white/10 p-6 space-y-5">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Product Name *</label>
+            <input name="name" value="{{ product.name }}" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Brand *</label>
+            <input name="brand" value="{{ product.brand }}" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Category *</label>
+            <select name="category" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary outline-none text-sm">
+              {% for cat in categories %}<option value="{{ cat }}" {% if cat == product.category %}selected{% endif %}>{{ cat }}</option>{% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Unit *</label>
+            <input name="unit" value="{{ product.unit }}" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-5">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Price ($) *</label>
+            <input name="price" type="number" step="0.01" value="{{ product.price }}" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Original Price ($)</label>
+            <input name="original_price" type="number" step="0.01" value="{{ product.original_price or '' }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Stock</label>
+            <input name="stock" type="number" value="{{ product.stock or 100 }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Image URL</label>
+          <input name="image_url" type="url" value="{{ product.image_url }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-white/50 mb-2">Badge</label>
+          <select name="badge" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-primary outline-none text-sm">
+            <option value="" {% if not product.badge %}selected{% endif %}>None</option>
+            {% for b in ['Sale','New','Organic','Hot'] %}<option {% if product.badge == b %}selected{% endif %}>{{ b }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="bg-primary text-black font-bold px-6 py-3 rounded-xl hover:brightness-110 transition flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">save</span> Save Changes
+          </button>
+          <a href="/vendor/products" class="px-6 py-3 rounded-xl border border-white/20 text-white/60 hover:text-white hover:bg-white/5 transition text-sm font-medium">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+
+    <!-- ORDERS -->
+    {% elif active == 'orders' %}
+    <div class="mb-4 flex items-center justify-between">
+      <p class="text-white/50 text-sm">{{ orders|length }} order(s) for your products</p>
+    </div>
+    <div class="space-y-5">
+      {% if orders %}
+      {% set status_flow = ['pending', 'confirmed', 'shipped', 'delivered'] %}
+      {% for o in orders %}
+      <div class="bg-[#0d1f0d] rounded-2xl border border-white/10 overflow-hidden">
+
+        <!-- Order Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-white/10">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-bold text-white">Sub-Order #{{ o.id }}</span>
+              <span class="text-[10px] font-bold px-2.5 py-1 rounded-full
+                {% if o.status == 'delivered' %}bg-green-500/20 text-green-400
+                {% elif o.status == 'shipped' %}bg-blue-500/20 text-blue-400
+                {% elif o.status == 'confirmed' %}bg-yellow-500/20 text-yellow-400
+                {% else %}bg-white/10 text-white/50{% endif %}">
+                {% if o.status == 'shipped' %}In Transit{% else %}{{ o.status|title }}{% endif %}
+              </span>
+              <span class="text-[10px] text-white/40">Group #{{ o.order_group_id }}</span>
+            </div>
+            <p class="text-xs text-white/40 mt-1">
+              {{ o.customer_name }} · {{ o.created_at[:10] }}
+            </p>
+            <p class="text-xs text-white/30 mt-0.5 truncate max-w-xs">{{ o.address }}, {{ o.pincode }}</p>
+            <p class="text-xs text-white/30">{{ o.mobile }}</p>
+          </div>
+          <p class="text-2xl font-black text-primary shrink-0">${{ "%.2f"|format(o.subtotal) }}</p>
+        </div>
+
+        <!-- Progress Timeline -->
+        <div class="px-6 py-4 border-b border-white/5">
+          <div class="flex items-center gap-0">
+            {% set cur_idx = status_flow.index(o.status) if o.status in status_flow else 0 %}
+            {% set step_labels = ['Pending', 'Confirmed', 'Shipped', 'Delivered'] %}
+            {% set step_icons = ['hourglass_empty', 'task_alt', 'local_shipping', 'done_all'] %}
+            {% for i in range(4) %}
+            <div class="flex items-center">
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center
+                  {% if i < cur_idx %}bg-primary
+                  {% elif i == cur_idx %}bg-primary/30 border border-primary/60
+                  {% else %}bg-white/10{% endif %}">
+                  <span class="material-symbols-outlined text-[14px]
+                    {% if i <= cur_idx %}text-primary{% else %}text-white/30{% endif %}"
+                    style="{% if i < cur_idx %}font-variation-settings:'FILL' 1{% endif %}">{{ step_icons[i] }}</span>
+                </div>
+                <p class="text-[9px] text-white/40 whitespace-nowrap">{{ step_labels[i] }}</p>
+              </div>
+              {% if not loop.last %}
+              <div class="w-8 md:w-14 h-0.5 mb-4 {% if i < cur_idx %}bg-primary{% else %}bg-white/10{% endif %}"></div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Action + Items -->
+        <div class="px-6 py-4 flex flex-col md:flex-row gap-6">
+          <!-- Items -->
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">Your Items in this Order</p>
+            <div class="space-y-2">
+              {% for item in o.line_items %}
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg overflow-hidden bg-white/5 shrink-0">
+                  <img src="{{ item.image_url }}" class="w-full h-full object-cover"/>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium truncate">{{ item.name }}</p>
+                  <p class="text-xs text-white/40">{{ item.quantity }} × ${{ "%.2f"|format(item.price) }}</p>
+                </div>
+                <p class="text-sm font-bold text-primary shrink-0">${{ "%.2f"|format(item.price * item.quantity) }}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Status Update -->
+          <div class="shrink-0 w-full md:w-52">
+            <p class="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">Update Status</p>
+            <form method="POST" action="/vendor/orders/{{ o.id }}/status" class="space-y-3">
+              {% set next_statuses = {
+                'pending': [('confirmed', 'Accept Order', 'task_alt')],
+                'confirmed': [('shipped', 'Mark Shipped', 'local_shipping')],
+                'shipped': [('delivered', 'Mark Delivered', 'done_all')],
+                'delivered': []
+              } %}
+              {% set nexts = next_statuses.get(o.status, []) %}
+              {% if nexts %}
+              {% for val, label, icon in nexts %}
+              <input type="hidden" name="status" value="{{ val }}"/>
+              <button type="submit" class="w-full bg-primary text-black font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 hover:brightness-110 transition">
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">{{ icon }}</span>
+                {{ label }}
+              </button>
+              {% endfor %}
+              {% else %}
+              <div class="w-full bg-green-500/20 text-green-400 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">done_all</span>
+                Order Delivered
+              </div>
+              {% endif %}
+              <select name="status" class="hidden" onchange="this.form.submit()">
+                {% for s in status_flow %}
+                <option value="{{ s }}" {% if o.status == s %}selected{% endif %}>{{ s|title }}</option>
+                {% endfor %}
+              </select>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="text-center py-24 bg-[#0d1f0d] rounded-2xl border border-dashed border-white/10">
+        <span class="material-symbols-outlined text-7xl text-white/10">receipt_long</span>
+        <p class="text-white/40 mt-4 font-medium">No orders yet.</p>
+        <p class="text-white/20 text-sm mt-1">When customers place orders with your products, they'll appear here.</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<script>
+let vendorChartInstance = null;
+
+async function updateVendorChart(filter) {
+  // Update buttons
+  document.querySelectorAll('.chart-filter').forEach(btn => {
+    btn.className = 'chart-filter px-3 py-1.5 text-xs font-bold rounded-lg text-white/50 hover:text-white transition-all';
+  });
+  const activeBtn = document.getElementById('btn-' + filter);
+  if(activeBtn) {
+    activeBtn.className = 'chart-filter px-3 py-1.5 text-xs font-bold rounded-lg bg-primary/20 text-primary transition-all';
+  }
+
+  try {
+    const res = await fetch(`/api/vendor/chart-data?filter=${filter}`);
+    const data = await res.json();
+
+    const ctx = document.getElementById('vendorChart').getContext('2d');
+    
+    if (vendorChartInstance) {
+      vendorChartInstance.destroy();
+    }
+
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.4)';
+    Chart.defaults.font.family = "'Work Sans', sans-serif";
+
+    vendorChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [
+          {
+            label: 'Revenue ($)',
+            data: data.revenue,
+            borderColor: '#13ec13',
+            backgroundColor: 'rgba(19, 236, 19, 0.1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#13ec13'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true, font: { size: 11, weight: 'bold' } } },
+          tooltip: { backgroundColor: 'rgba(10, 21, 10, 0.9)', titleColor: '#fff', bodyColor: '#fff', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, padding: 10 }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false } },
+          y: { type: 'linear', display: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false }, ticks: { callback: function(val) { return '$' + val; } } }
+        }
+      }
+    });
+  } catch (err) {
+    console.error("Failed to load chart data", err);
+  }
+}
+
+// Load chart on overview tab
+{% if active == 'overview' %}
+document.addEventListener('DOMContentLoaded', () => {
+  updateVendorChart('7d');
+});
+{% endif %}
+</script>
+</body>
+</html>

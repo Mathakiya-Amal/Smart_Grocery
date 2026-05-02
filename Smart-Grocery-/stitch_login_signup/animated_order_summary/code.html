@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Summary - Smart Grocery</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulse-custom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .animate-pulse-slow {
+            animation: pulse-custom 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1b0d] dark:text-[#f0f4f0] transition-colors duration-200">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e7f3e7] dark:border-[#2a3a2a] px-4 md:px-10 lg:px-40 py-3 bg-white dark:bg-[#152a15]">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-[#0d1b0d] dark:text-white text-lg font-bold leading-tight tracking-tight">Smart Grocery</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-[#0d1b0d] dark:text-[#f0f4f0] text-sm font-medium hover:text-primary transition-colors" href="#">Shop</a>
+<a class="text-[#0d1b0d] dark:text-[#f0f4f0] text-sm font-medium hover:text-primary transition-colors" href="#">Categories</a>
+<a class="text-[#0d1b0d] dark:text-[#f0f4f0] text-sm font-medium hover:text-primary transition-colors" href="#">Deals</a>
+<a class="text-[#0d1b0d] dark:text-[#f0f4f0] text-sm font-medium hover:text-primary transition-colors" href="#">Orders</a>
+</nav>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-[#e7f3e7] dark:border-[#2a3a2a]" data-alt="User profile avatar placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuALuiVgpvAUvcS3o_utKH-ZGRKMxeJawS_k3kLeYkuzamV0gJFeY79hfcmyOfissO0X_e19fZCKTMaWKplaUHNRk0fP16X39rKYzftsWRCld-qgf3CwQ-T8tsOS_M0t62k3fQDvdACJNNxJDcRZ1xXdNZyNsg0pf620BnZcr4xIi6w-Seh7rwGWBVg3H7oLpacKSQQowNAIu9uzHa9aQRPmrrPx4MHa0dw1GVkosetWBSlrDH0sh4OszOUi1tYg7DTTHa7HRaMxTw");'></div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col items-center py-8 px-4">
+<div class="max-w-[800px] w-full flex flex-col gap-6 animate-fade-in-up">
+<!-- Progress Stepper -->
+<div class="flex flex-col gap-3 px-2">
+<div class="flex gap-6 justify-between items-center">
+<p class="text-[#0d1b0d] dark:text-white text-base font-semibold">Checkout Progress</p>
+<p class="text-[#0d1b0d] dark:text-white text-sm font-medium">Step 3 of 3</p>
+</div>
+<div class="rounded-full bg-[#cfe7cf] dark:bg-[#1a3a1a] h-2.5 overflow-hidden">
+<div class="h-full rounded-full bg-primary" style="width: 100%;"></div>
+</div>
+<p class="text-[#4c9a4c] dark:text-primary text-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">verified</span>
+                            Review &amp; Place Order
+                        </p>
+</div>
+<h1 class="text-[#0d1b0d] dark:text-white tracking-tight text-3xl font-bold text-center mt-4">Review Your Order</h1>
+<!-- Summary Card Container -->
+<div class="bg-white dark:bg-[#152a15] rounded-xl shadow-lg border border-[#e7f3e7] dark:border-[#2a3a2a] overflow-hidden animate-float shadow-2xl">
+<!-- Top Banner Image/Abstract -->
+<div class="h-24 w-full bg-gradient-to-r from-[#13ec13]/20 to-[#13ec13]/10 flex items-center px-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">shopping_basket</span>
+<div>
+<p class="text-[#0d1b0d] dark:text-white text-lg font-bold">Order Summary</p>
+<p class="text-[#4c9a4c] dark:text-[#a0cfa0] text-sm">Review your items and delivery details</p>
+</div>
+</div>
+</div>
+<!-- Content Sections -->
+<div class="p-6 md:p-8 flex flex-col gap-8">
+<!-- Delivery Address Section -->
+<section>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">local_shipping</span>
+<h3 class="text-[#0d1b0d] dark:text-white text-lg font-bold">Delivery Details</h3>
+</div>
+<div class="p-4 rounded-lg bg-background-light dark:bg-background-dark/50 border border-[#e7f3e7] dark:border-[#2a3a2a]">
+<p class="text-[#0d1b0d] dark:text-white font-semibold mb-1">Academic Science Park Residence</p>
+<p class="text-[#4c9a4c] dark:text-[#a0cfa0] text-sm">123 Academic Way, Science Park, Suite 402</p>
+<p class="text-[#4c9a4c] dark:text-[#a0cfa0] text-sm">New York, NY 10012</p>
+<div class="mt-3 flex items-center gap-2 text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded w-fit">
+<span class="material-symbols-outlined text-xs">schedule</span>
+                                        Estimated Arrival: Today, 4:00 PM - 6:00 PM
+                                    </div>
+</div>
+</section>
+<!-- Products List Section -->
+<section>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+<h3 class="text-[#0d1b0d] dark:text-white text-lg font-bold">Items in Order</h3>
+</div>
+<div class="divide-y divide-[#e7f3e7] dark:divide-[#2a3a2a]">
+<!-- Item 1 -->
+<div class="flex items-center gap-4 py-4 animate-fade-in-up" style="animation-delay: 0.2s">
+<div class="size-16 rounded-lg bg-center bg-cover border border-[#e7f3e7] dark:border-[#2a3a2a]" data-alt="Fresh organic avocados on a surface" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAPtIHq2eCPYKKH1liZEx3N8s_wVFcl8RWqOgH5XxaSQyWDK43QlbwSUqqnKMMlfL_Bnk-vIa2Yy1nUGN2m_ujDSwskkROAF_cw_MWYqpAH7exQhjQn6-2M3bxhUIldMF0gVsJAa_8kg9W2jv77tpDb5HHBvHOE8GMcGbamCP3BBiuIzEA2f_eI0F_jl4D6401zMgcacZh-PL0rHIVrf1sPKnrTwymTHeZOb1CrAQX0N3QsLAeRTQVezG7vIE7CYVidhe97N4uqPw");'></div>
+<div class="flex-1">
+<p class="text-[#0d1b0d] dark:text-white font-semibold">Organic Avocados</p>
+<p class="text-[#4c9a4c] dark:text-[#a0cfa0] text-sm">Qty: 3</p>
+</div>
+<p class="text-[#0d1b0d] dark:text-white font-bold">$5.97</p>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 py-4 animate-fade-in-up" style="animation-delay: 0.4s">
+<div class="size-16 rounded-lg bg-center bg-cover border border-[#e7f3e7] dark:border-[#2a3a2a]" data-alt="Carton of unsweetened almond milk" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB1Ci_uuY8jjCYolxQhm5NBcy_vC1597vLb076-HobCMEOYiFfzojF344ZKbYv2H4t7_FgBI2oevGXVMCsJDKI43xx_f01xQa6S0LNxyO94Pw9_zhqURtfzsaILlj2ovj_WUbqUV0GUBZzT4eHw-wolvYPNFWCwfW_sJnpinLHkh2nWf1xOs28d6uO9y5dbyHOVeKaUoeaUTbWQERhkmXKQlJ3gHxNlDHeVP9BwoeL3pyJYkxJtW-JQpyZK-rJs7wELou83Ht8zKQ");'></div>
+<div class="flex-1">
+<p class="text-[#0d1b0d] dark:text-white font-semibold">Almond Milk 1L</p>
+<p class="text-[#4c9a4c] dark:text-[#a0cfa0] text-sm">Qty: 2</p>
+</div>
+<p class="text-[#0d1b0d] dark:text-white font-bold">$7.00</p>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-4 py-4 animate-fade-in-up" style="animation-delay: 0.6s">
+<div class="size-16 rounded-lg bg-center bg-cover border border-[#e7f3e7] dark:border-[#2a3a2a]" data-alt="Loaf of fresh whole grain bread" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA8tLdCqKtgl64caKgkaZyhH_1l3qb7mI5SW8eD0HbKBd_oATpeBBO6EbmWHcl-61MfPO7GEO3tz5yNi5vnAnbITWNDQlorNZq1yJ2cwP4-tMzhApn1dR3lTv8wbQLpKbj_vs_P55tHHvf5sAaIJ0y-iePivMmRkN7fsPNMEddSLNaaqvjdFD_7911y-wOM0tNb5yHwg2RxgJe9LyzUte3kaiZ55IH5HVeV4W_9PXaSxPQLIiwlkEIPRguEl9xvzLumyBtBMSA9MQ");'></div>
+<div class="flex-1">
+<p class="text-[#0d1b0d] dark:text-white font-semibold">Whole Grain Bread</p>
+<p class="text-[#4c9a4c] dark:text-[#a0cfa0] text-sm">Qty: 1</p>
+</div>
+<p class="text-[#0d1b0d] dark:text-white font-bold">$4.50</p>
+</div>
+</div>
+</section>
+<!-- Price Breakdown Section -->
+<section class="bg-background-light dark:bg-background-dark/50 p-6 rounded-xl border border-dashed border-[#cfe7cf] dark:border-[#2a3a2a]">
+<div class="flex flex-col gap-3">
+<div class="flex justify-between text-sm">
+<span class="text-[#4c9a4c] dark:text-[#a0cfa0]">Subtotal</span>
+<span class="text-[#0d1b0d] dark:text-white font-medium">$17.47</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-[#4c9a4c] dark:text-[#a0cfa0]">Delivery Fee</span>
+<span class="text-[#0d1b0d] dark:text-white font-medium">$2.99</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-[#4c9a4c] dark:text-[#a0cfa0]">Estimated Tax</span>
+<span class="text-[#0d1b0d] dark:text-white font-medium">$1.40</span>
+</div>
+<hr class="border-[#e7f3e7] dark:border-[#2a3a2a] my-2"/>
+<div class="flex justify-between items-center">
+<span class="text-[#0d1b0d] dark:text-white text-xl font-bold">Total Amount</span>
+<span class="text-primary text-2xl font-black">$21.86</span>
+</div>
+</div>
+</section>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-4 mt-2">
+<button class="w-full bg-primary hover:bg-[#11d811] text-white font-bold py-4 rounded-xl transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2 animate-pulse-slow">
+<span>Place Your Order</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<button class="w-full bg-transparent hover:bg-[#cfe7cf]/20 text-[#4c9a4c] dark:text-primary font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+<span>Back to Shopping Cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<div class="flex flex-col items-center gap-4 py-8">
+<div class="flex gap-6 text-sm text-[#4c9a4c] dark:text-[#a0cfa0] font-medium">
+<a class="hover:underline" href="#">Privacy Policy</a>
+<a class="hover:underline" href="#">Terms of Service</a>
+<a class="hover:underline" href="#">Refund Policy</a>
+</div>
+<p class="text-xs text-[#4c9a4c]/60 dark:text-[#a0cfa0]/40 text-center px-10">
+                            By placing your order, you agree to Smart Grocery's privacy notice and conditions of use. 
+                            Academic use license © 2024 Smart Grocery E-Commerce.
+                        </p>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

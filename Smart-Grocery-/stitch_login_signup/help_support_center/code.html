@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Help &amp; Support Center - Smart Grocery</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+<span class="material-symbols-outlined text-3xl">shopping_basket</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Smart Grocery</h2>
+</div>
+<nav class="flex items-center gap-9">
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Shop</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Orders</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Account</a>
+<a class="text-slate-700 dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Deals</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-slate-400 flex border-none bg-slate-100 dark:bg-slate-800 items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-0 border-none bg-slate-100 dark:bg-slate-800 focus:border-none h-full placeholder:text-slate-500 px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal" placeholder="Search products..." value=""/>
+</div>
+</label>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-slate-900 text-sm font-bold leading-normal hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-xl">shopping_cart</span>
+<span class="truncate uppercase tracking-wider">Cart</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile avatar portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA3FbiScdNMexLuIudIUK65KnldFrdtZZ558cJueJ17UIQ2uq5LLuTnn5yR7HDRXbOUp8llnf0Cih3DMm01KxigsYjwVO_YoogTtnpWe44zm0ibh2I0VLDg1vXeF4MzHl08U1_RtkHY_r4j1V2o3fIAbCNrydh3l6UsMnsWY7kzSBhiIjkh2WHNYbkWB6T_Hoao4P-YfPWvdvA3lsQ_XEjUr9hIywMYO-mLOyDOyVT-VCX7lC8unDhyCir2jBNLgGQFfDbFCQLDmA");'></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="mx-auto w-full max-w-[1200px] px-6 py-12">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap items-center gap-2 mb-8">
+<a class="text-primary text-sm font-medium hover:underline" href="#">Home</a>
+<span class="text-slate-400"><span class="material-symbols-outlined text-xs">chevron_right</span></span>
+<span class="text-slate-600 dark:text-slate-400 text-sm font-medium">Help &amp; Support</span>
+</div>
+<!-- Hero Header -->
+<div class="text-center mb-12">
+<h1 class="text-slate-900 dark:text-white text-4xl font-bold leading-tight mb-4">How can we help you?</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg mb-8">Search for articles, guides, and status updates on your orders.</p>
+<div class="max-w-2xl mx-auto">
+<label class="flex flex-col h-14 w-full shadow-lg rounded-xl overflow-hidden">
+<div class="flex w-full flex-1 items-stretch h-full">
+<div class="text-slate-400 flex border-none bg-white dark:bg-slate-800 items-center justify-center pl-6 border-r-0">
+<span class="material-symbols-outlined text-2xl text-primary">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-0 h-full placeholder:text-slate-400 px-4 text-lg font-normal" placeholder="Search for 'missing items', 'refund status'..." value=""/>
+<div class="bg-white dark:bg-slate-800 pr-2 py-2">
+<button class="bg-primary text-slate-900 h-full px-6 rounded-lg font-bold text-sm hover:brightness-105 transition-all">SEARCH</button>
+</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Category Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+<!-- Order Issues -->
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined text-3xl">package_2</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Order Issues</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-relaxed">Tracking, missing items, damaged goods, and delivery delays.</p>
+</div>
+</div>
+<!-- Payments -->
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined text-3xl">payments</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Payments</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-relaxed">Billing history, promo codes, wallet balance, and invoices.</p>
+</div>
+</div>
+<!-- Refunds -->
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined text-3xl">currency_exchange</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Refunds</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-relaxed">Refund policy, status updates, and returns process.</p>
+</div>
+</div>
+<!-- Account -->
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer">
+<div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined text-3xl">manage_accounts</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Account</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-relaxed">Password resets, profile settings, and privacy preferences.</p>
+</div>
+</div>
+</div>
+<!-- Contact Support Section -->
+<div class="border-t border-slate-200 dark:border-slate-800 pt-16">
+<div class="text-center mb-10">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white">Still need help?</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-2">Our support team is available 24/7 to assist you.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+<!-- Live Chat -->
+<div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center text-center">
+<div class="relative mb-6">
+<div class="size-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-slate-700 dark:text-slate-300">chat_bubble</span>
+</div>
+<span class="absolute top-0 right-0 flex h-4 w-4">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-4 w-4 bg-primary border-2 border-white dark:border-slate-900"></span>
+</span>
+</div>
+<h3 class="text-xl font-bold mb-2">Live Chat</h3>
+<p class="text-slate-500 dark:text-slate-400 mb-6">Speak with an agent right now. Average wait time: &lt; 2 minutes.</p>
+<button class="w-full py-3 bg-primary text-slate-900 font-bold rounded-xl hover:brightness-105 transition-all uppercase tracking-wide">
+                                Start Chatting
+                            </button>
+<div class="mt-3 flex items-center gap-2">
+<span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded uppercase">Online Now</span>
+</div>
+</div>
+<!-- Email Support -->
+<div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-center text-center">
+<div class="mb-6">
+<div class="size-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-slate-700 dark:text-slate-300">mail</span>
+</div>
+</div>
+<h3 class="text-xl font-bold mb-2">Email Support</h3>
+<p class="text-slate-500 dark:text-slate-400 mb-6">Send us a ticket regarding your inquiry. Response within 24 hours.</p>
+<button class="w-full py-3 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold rounded-xl hover:opacity-90 transition-all uppercase tracking-wide">
+                                Send an Email
+                            </button>
+<p class="mt-4 text-xs text-slate-400">support@smartgrocery.com</p>
+</div>
+</div>
+</div>
+<!-- Trending Topics / FAQ Section -->
+<div class="mt-20">
+<h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+                        Trending Articles
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<a class="flex items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 hover:text-primary transition-colors" href="#">
+<span class="font-medium">How to apply a coupon to an existing order?</span>
+<span class="material-symbols-outlined text-slate-400">arrow_forward</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 hover:text-primary transition-colors" href="#">
+<span class="font-medium">My delivery is late, what should I do?</span>
+<span class="material-symbols-outlined text-slate-400">arrow_forward</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 hover:text-primary transition-colors" href="#">
+<span class="font-medium">Changing your delivery address after checkout</span>
+<span class="material-symbols-outlined text-slate-400">arrow_forward</span>
+</a>
+<a class="flex items-center justify-between p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 hover:text-primary transition-colors" href="#">
+<span class="font-medium">What is the Smart Grocery Refund Policy?</span>
+<span class="material-symbols-outlined text-slate-400">arrow_forward</span>
+</a>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-10">
+<div class="mx-auto max-w-[1200px] px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 text-primary mb-4">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="font-bold text-slate-900 dark:text-white">Smart Grocery</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Freshness delivered to your doorstep. The smartest way to buy your groceries online.
+                        </p>
+</div>
+<div>
+<h4 class="font-bold mb-4 text-sm uppercase tracking-widest text-slate-400">Shop</h4>
+<ul class="text-sm space-y-2 text-slate-600 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Fruit &amp; Veg</a></li>
+<li><a class="hover:text-primary" href="#">Dairy &amp; Eggs</a></li>
+<li><a class="hover:text-primary" href="#">Bakery</a></li>
+<li><a class="hover:text-primary" href="#">Beverages</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4 text-sm uppercase tracking-widest text-slate-400">Company</h4>
+<ul class="text-sm space-y-2 text-slate-600 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Careers</a></li>
+<li><a class="hover:text-primary" href="#">Sustainability</a></li>
+<li><a class="hover:text-primary" href="#">Blog</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-4 text-sm uppercase tracking-widest text-slate-400">Support</h4>
+<ul class="text-sm space-y-2 text-slate-600 dark:text-slate-400">
+<li><a class="text-primary font-bold" href="#">Help Center</a></li>
+<li><a class="hover:text-primary" href="#">Contact Us</a></li>
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="mx-auto max-w-[1200px] px-6 border-t border-slate-100 dark:border-slate-800 mt-10 pt-6 text-center text-xs text-slate-400">
+                    © 2023 Smart Grocery E-Commerce Inc. All rights reserved.
+                </div>
+</footer>
+</div>
+</div>
+</body></html>

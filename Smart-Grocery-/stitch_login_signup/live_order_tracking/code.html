@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Live Order Tracking | Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cfe7cf;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d1b0d] dark:text-white transition-colors duration-300">
+<!-- Main Container -->
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex h-16 items-center justify-between border-b border-solid border-[#e7f3e7] dark:border-[#2a442a] bg-white dark:bg-[#152b15] px-6 lg:px-10 z-20">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">shopping_basket</span>
+</div>
+<h1 class="text-lg font-bold leading-tight tracking-tight">Smart Grocery</h1>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-8">
+<nav class="flex items-center gap-9">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-semibold text-primary border-b-2 border-primary pb-5 mt-5" href="#">Order Tracking</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Groceries</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Offers</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center size-10 rounded-lg bg-[#e7f3e7] dark:bg-[#2a442a] text-[#0d1b0d] dark:text-white transition-all hover:bg-primary/20">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-primary/20" data-alt="User profile photo avatar circular" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoEkKA2TUSS-maXDeWZ_vurXLdUHY3GnXjSvGthW9mBUws7-c-Auor6Sn23OANH2QIAK1Tg4_BPvJPAgMqrDG2H9R4posr_X0sv87OHuZYDaXJTgRfFNINHwF9I2U-vVldGeMwzTPCujBjc4S5WV5QoPE-QrovFjHcgfJvYY4kQRk2g80TX17suel9Jgf_G3RPOhux1zStD1zkrwIfMP90d_qRNitJELt04V4b2DOSYLgHdhVTfXXLgBRzU8cs4s7uF29p9DL_FA')"></div>
+</div>
+</header>
+<!-- Content Area: Split View -->
+<main class="flex flex-1 overflow-hidden">
+<!-- Left Sidebar: Order Details & Status -->
+<aside class="w-full md:w-[400px] flex flex-col border-r border-[#e7f3e7] dark:border-[#2a442a] bg-white dark:bg-[#152b15] overflow-y-auto z-10">
+<!-- Order Header -->
+<div class="p-6 border-b border-[#f0f7f0] dark:border-[#203a20]">
+<div class="flex items-center gap-2 mb-2">
+<a class="flex items-center text-primary text-sm font-medium hover:underline" href="#">
+<span class="material-symbols-outlined text-sm mr-1">arrow_back</span>
+                            Back to Orders
+                        </a>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h2 class="text-2xl font-black tracking-tight">Order #SG-88291</h2>
+<p class="text-primary font-semibold flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                Arriving in 12 mins
+                            </p>
+</div>
+<button class="p-2 rounded-lg bg-background-light dark:bg-background-dark text-sm font-bold border border-[#e7f3e7] dark:border-[#2a442a]">
+                            Help
+                        </button>
+</div>
+</div>
+<!-- Vertical Status Tracker -->
+<div class="flex-1 p-6">
+<h3 class="text-xs font-bold uppercase tracking-wider text-[#4c9a4c] mb-6">Delivery Progress</h3>
+<div class="relative flex flex-col">
+<!-- Step 1: Placed -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="size-8 rounded-full bg-primary text-white flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-lg">check</span>
+</div>
+<div class="w-1 bg-primary h-12"></div>
+</div>
+<div class="pt-0.5 pb-8">
+<p class="font-bold text-[#0d1b0d] dark:text-white">Order Placed</p>
+<p class="text-sm text-[#4c9a4c]">Yesterday, 10:30 AM</p>
+</div>
+</div>
+<!-- Step 2: Packed -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="size-8 rounded-full bg-primary text-white flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-lg">inventory_2</span>
+</div>
+<div class="w-1 bg-primary h-12"></div>
+</div>
+<div class="pt-0.5 pb-8">
+<p class="font-bold text-[#0d1b0d] dark:text-white">Packed</p>
+<p class="text-sm text-[#4c9a4c]">Yesterday, 10:45 AM</p>
+</div>
+</div>
+<!-- Step 3: Out for Delivery (Active) -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="size-8 rounded-full bg-primary text-white flex items-center justify-center z-10 ring-4 ring-primary/20">
+<span class="material-symbols-outlined text-lg">local_shipping</span>
+</div>
+<div class="w-1 bg-[#cfe7cf] dark:bg-[#2a442a] h-12"></div>
+</div>
+<div class="pt-0.5 pb-8">
+<p class="font-bold text-[#0d1b0d] dark:text-white">Out for Delivery</p>
+<p class="text-sm text-primary font-medium">In transit - 11:05 AM</p>
+</div>
+</div>
+<!-- Step 4: Delivered (Pending) -->
+<div class="flex gap-4 group">
+<div class="flex flex-col items-center">
+<div class="size-8 rounded-full bg-[#e7f3e7] dark:bg-[#2a442a] text-[#4c9a4c] flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-lg">home</span>
+</div>
+</div>
+<div class="pt-0.5">
+<p class="font-bold text-[#4c9a4c]">Delivered</p>
+<p class="text-sm text-[#4c9a4c]/60">Expected by 11:25 AM</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Order Summary -->
+<div class="p-4 m-6 rounded-xl bg-background-light dark:bg-background-dark border border-[#e7f3e7] dark:border-[#2a442a]">
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-bold uppercase text-[#4c9a4c]">Order Summary</span>
+<span class="text-xs font-bold">8 Items</span>
+</div>
+<div class="flex -space-x-3 overflow-hidden mb-4">
+<div class="inline-block size-8 rounded-full ring-2 ring-white dark:ring-[#152b15] bg-white overflow-hidden">
+<img alt="" data-alt="Fresh green broccoli close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKuTOA_iBPb5u8A5JhBCgKfSWN0YQhkO7hukNQlPP5soDshZpLkytKUJgT8T4Z-OpYr2DiTJSjefPIJQeAjvvGBU6Logr1-7nH1F7beJeGCoFc13-ue0KN7-9W6U_xpMHA6Nyw91mVanVGc2JxrdujpJG-kncakTyBBLUYPLOB0YiY7eqfrZxHlfp2c-9rQYM_xz3YzYE55xetZ6GjPkNUPj-DY5_mJJRkAxuHIUd71tNtLL3qyo_Z8f9QJ65T8WNZf2Ge_hWa5g"/>
+</div>
+<div class="inline-block size-8 rounded-full ring-2 ring-white dark:ring-[#152b15] bg-white overflow-hidden">
+<img alt="" data-alt="Red apples in a basket" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWjQQheo9rfO0DR0fSJc8sydHKnTX2DSBLelSDgIyp-1OuUxS9CROioX236PeC_o5_9hitVMqAfnF4ZM4ub8RZBmIbHIifqqDFEeBxtVX_lLQfGWlkMVJaeWcLosTtuPeWokaqsxgTMOOkA1imkpZ3WB9YSEf2vWFDQ46HkF0bAztR1uYmJLdjPWtiCc5ZOotC8oFC36xOAyndbHs4q7z4iEEnxs0u5Kcn_1DYn394yf1Yu5D-wT6_OYG6O4qQsG4rOO6tFtLyrA"/>
+</div>
+<div class="inline-block size-8 rounded-full ring-2 ring-white dark:ring-[#152b15] bg-white overflow-hidden">
+<img alt="" data-alt="Whole milk bottle in fridge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGFWhAejEZ3gxcKUte9bYEza1fzMaJdVqZyU3t-C78rXySfdgJBPhmEgu4F7hUsV5mt6jcB0fE_qVewvt0jgjNUOP8c0L1tWRISvx-mhDLlQe3gHyG3VsYSQgB4RozuOjnOhHVOVLfoH1Cet7SzqEk3wFFiZrF6hG4S5DjdX-MEE-m7yLi-qDoOPehrHXW4L49jUqo2gmggUsnfTqAks4v-RYSDaYiNUdvWe8K1QkUSp-FFFM01UTAseNmJ2lWLMy3s2cIkPbwyQ"/>
+</div>
+<div class="inline-block size-8 rounded-full ring-2 ring-white dark:ring-[#152b15] bg-[#cfe7cf] dark:bg-[#2a442a] flex items-center justify-center text-[10px] font-bold">
+                            +5
+                        </div>
+</div>
+<button class="w-full py-2 text-xs font-bold text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition-all">
+                        VIEW FULL RECEIPT
+                    </button>
+</div>
+</aside>
+<!-- Right Section: Map & Floating Driver Card -->
+<section class="flex-1 relative bg-[#eef3ee] dark:bg-[#0a160a]">
+<!-- Map Background Placeholder -->
+<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="Modern high detailed city map with navigation paths" data-location="New York City map view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZC6olBlMS6eGYW9yrJgHTY9OXkROp7jouadbcDp-OiSzq26qMtOB2wq_XATOZrtDjeQM0-huGmZTcADA7CITpYC9Xp5slDNiOoHDVTG7cAbu4_2Kcvo4xSK88B9PR0i5B6_Fk-_HQWPMZ-3EIL2qGB7k6N1a4huCoq3-DpUobhn78w4DcrjAoJ8O4bkf4LKbpG1DjGffSdCsVdFYqE21bpiqO_uZRioSj2-6NQH1rLvihDiGOwaO_mK8vg091CMzifWEmv1X1dQ')">
+<!-- SVG Overlay for Route and Markers (Decorative) -->
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 1000 1000">
+<path class="opacity-60" d="M200 800 Q 400 700 500 500 T 800 200" fill="none" stroke="#13ec13" stroke-dasharray="12,8" stroke-width="6"></path>
+<!-- Destination Marker -->
+<g transform="translate(790, 150)">
+<circle cx="10" cy="10" fill="#13ec13" r="12"></circle>
+<circle cx="10" cy="10" fill="#13ec13" fill-opacity="0.2" r="20">
+<animate attributename="r" dur="1.5s" from="15" repeatcount="indefinite" to="30"></animate>
+<animate attributename="opacity" dur="1.5s" from="0.5" repeatcount="indefinite" to="0"></animate>
+</circle>
+<text class="font-bold text-xs" fill="#0d1b0d" x="-15" y="45">Home</text>
+</g>
+<!-- Delivery Partner Marker -->
+<g transform="translate(490, 490)">
+<circle cx="10" cy="10" fill="#13ec13" r="15" stroke="white" stroke-width="2"></circle>
+<path d="M5 5 L15 10 L5 15 Z" fill="white" transform="rotate(-45 10 10)"></path>
+</g>
+</svg>
+</div>
+<!-- Floating Zoom Controls -->
+<div class="absolute right-6 top-6 flex flex-col gap-2">
+<button class="size-10 flex items-center justify-center bg-white dark:bg-[#152b15] rounded-lg shadow-lg hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="size-10 flex items-center justify-center bg-white dark:bg-[#152b15] rounded-lg shadow-lg hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="size-10 flex items-center justify-center bg-white dark:bg-[#152b15] rounded-lg shadow-lg hover:bg-primary hover:text-white transition-all mt-2">
+<span class="material-symbols-outlined text-primary">my_location</span>
+</button>
+</div>
+<!-- Floating Driver Info Card -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-white dark:bg-[#152b15] rounded-2xl shadow-2xl p-4 lg:p-6 border border-[#e7f3e7] dark:border-[#2a442a]">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="size-16 rounded-xl bg-cover bg-center border-2 border-primary/20" data-alt="Delivery driver portrait photo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDq9oQNQ9BGzZJlT3ribuGRPK6r0HyfSjKoa1kWa1VWTygiDyubtC-zGYzsmDTbBvp8zk3J_FgX6wcp0w0mfvDHDxqOh84AaNLnCax94nuTuSpjcQZJVTU95aC4aBCqcUApGHSRJ4OU-6d1ynYiDAtaWmlPTJF6eytRLgaiJ1ZzafUmucFjX8tWtvN3vOpQHYMHFWoi3X9pMuING9FN8p-xp6ifM_4_ZyZ4GTgANwhxGsxh98DnOedajjiizJn0d95rKloNd0yH0Q')"></div>
+<div class="absolute -bottom-2 -right-2 size-6 rounded-full bg-primary text-white flex items-center justify-center text-[10px] font-bold ring-2 ring-white dark:ring-[#152b15]">
+<span class="material-symbols-outlined text-xs">verified</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h4 class="text-lg font-black leading-none">Alex Johnson</h4>
+<div class="flex items-center bg-primary/10 px-2 py-1 rounded text-primary text-xs font-bold">
+<span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1">star</span>
+                                    4.9
+                                </div>
+</div>
+<p class="text-sm text-[#4c9a4c] font-medium mt-1">Toyota Prius • ABC-1234</p>
+<div class="flex items-center gap-2 mt-2">
+<span class="size-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[10px] font-bold uppercase tracking-tight text-[#4c9a4c]">Picking up fresh items</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="flex items-center justify-center size-12 rounded-xl bg-primary text-[#0d1b0d] shadow-lg shadow-primary/30 hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-2xl font-bold">call</span>
+</button>
+<button class="flex items-center justify-center size-12 rounded-xl bg-[#e7f3e7] dark:bg-[#2a442a] text-[#0d1b0d] dark:text-white hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-2xl">chat</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Live Updates Toast -->
+<div class="absolute left-6 top-6 animate-bounce">
+<div class="flex items-center gap-3 bg-white/90 dark:bg-[#152b15]/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-primary/20">
+<div class="size-2 rounded-full bg-primary"></div>
+<span class="text-xs font-bold">Alex just reached 5th Avenue</span>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

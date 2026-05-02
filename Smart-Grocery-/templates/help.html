@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% block title %}Help Center - Smart Grocery{% endblock %}
+{% block extra_styles %}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.animate-fade-in-up{animation:fadeInUp 0.5s ease-out forwards}
+{% endblock %}
+{% block content %}
+<main class="animate-fade-in-up">
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-primary/10 to-green-50 py-16 px-4 text-center">
+    <div class="max-w-2xl mx-auto">
+      <div class="size-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
+        <span class="material-symbols-outlined text-3xl text-primary">support_agent</span>
+      </div>
+      <h1 class="text-4xl font-black tracking-tight">How can we help?</h1>
+      <p class="text-slate-500 mt-3 text-lg">Search our help center or browse popular topics below.</p>
+      <div class="mt-6 relative max-w-lg mx-auto">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">search</span>
+        <input type="text" id="help-search" placeholder="e.g. cancel order, refund, delivery..." class="w-full pl-12 pr-4 py-4 rounded-2xl border border-slate-200 bg-white shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-base"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Topics -->
+  <section class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-xl font-bold text-slate-700 mb-6">Popular Topics</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      {% for icon, label, color in [
+        ('local_shipping', 'Delivery', 'bg-blue-50 border-blue-100 text-blue-600'),
+        ('undo', 'Returns', 'bg-orange-50 border-orange-100 text-orange-600'),
+        ('receipt', 'Orders', 'bg-green-50 border-green-100 text-green-600'),
+        ('account_circle', 'Account', 'bg-purple-50 border-purple-100 text-purple-600'),
+        ('credit_card', 'Payments', 'bg-red-50 border-red-100 text-red-600'),
+        ('bug_report', 'Technical', 'bg-slate-50 border-slate-100 text-slate-600'),
+      ] %}
+      <button onclick="filterFAQ('{{ label }}')" class="{{ color }} border rounded-2xl p-4 text-center hover:scale-[1.03] transition-all flex flex-col items-center gap-2 shadow-sm">
+        <span class="material-symbols-outlined text-3xl">{{ icon }}</span>
+        <span class="text-sm font-bold">{{ label }}</span>
+      </button>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="max-w-4xl mx-auto px-4 pb-16">
+    <h2 class="text-xl font-bold text-slate-700 mb-6">Frequently Asked Questions</h2>
+    <div class="space-y-3" id="faq-list">
+      {% for q, a, tag in [
+        ("How long does delivery take?", "Standard delivery takes 30–45 minutes after you place your order. Express delivery is available for an extra $2.99.", "Delivery"),
+        ("How do I track my order?", "Go to My Orders and click the 'Track' button next to any order. You'll see a real-time status timeline.", "Delivery"),
+        ("Can I cancel my order?", "You can cancel within 5 minutes of placing it. Go to My Orders, select your order, and tap 'Cancel Order'.", "Orders"),
+        ("What is your return policy?", "We accept returns within 24 hours for any product quality issues. Contact support and we'll issue a full refund.", "Returns"),
+        ("How do I change my delivery address?", "Go to Profile Settings and update your delivery address. It will be applied to your next order.", "Account"),
+        ("What payment methods do you accept?", "We accept all major credit/debit cards, Apple Pay, Google Pay, and PayPal.", "Payments"),
+        ("My order hasn't arrived – what should I do?", "First, check your tracking page. If there's an issue, contact us via live chat or email and we'll resolve it immediately.", "Orders"),
+        ("Is there a minimum order value?", "There's no minimum order. Free delivery applies for orders above $30; otherwise a $5.00 delivery fee applies.", "Delivery"),
+        ("How do I reset my password?", "Go to Profile Settings > Security and use the 'Change Password' form to update your password.", "Account"),
+        ("Are your products really organic?", "Yes! All items tagged 'Organic' carry certified organic labels. We partner directly with local farms.", "Technical"),
+      ] %}
+      <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm" data-tag="{{ tag }}" data-question="{{ q.lower() }}">
+        <button onclick="toggleFAQ(this)" class="w-full text-left px-6 py-5 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="px-2 py-0.5 text-xs font-bold rounded-full bg-primary/10 text-primary">{{ tag }}</span>
+            <span class="font-semibold text-slate-900">{{ q }}</span>
+          </div>
+          <span class="material-symbols-outlined text-slate-400 shrink-0 faq-icon transition-transform">expand_more</span>
+        </button>
+        <div class="faq-answer hidden px-6 pb-5">
+          <p class="text-slate-600 leading-relaxed text-sm border-t border-slate-100 pt-4">{{ a }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Contact Cards -->
+  <section class="bg-slate-50 border-t border-slate-200 py-16 px-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl font-black">Still need help?</h2>
+        <p class="text-slate-500 mt-2">Our team is available 24/7 to assist you.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 relative">
+        <!-- Live Chat Card -->
+        <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center hover:shadow-xl transition-all w-full flex flex-col items-center">
+          <div class="size-16 bg-blue-600/10 border border-blue-600/20 rounded-2xl flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-3xl text-blue-600">chat</span>
+          </div>
+          <h3 class="font-black text-xl mb-2">Live Chat</h3>
+          <p class="text-sm text-slate-500 mb-6 flex-1">Get instant answers from our AI support team.</p>
+          <button onclick="openChat()" class="bg-blue-600 text-white font-black px-6 py-4 rounded-2xl hover:brightness-110 transition-all text-sm w-full shadow-lg shadow-blue-600/20">Start Chat</button>
+        </div>
+
+        <!-- Email Support Card -->
+        <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center hover:shadow-xl transition-all w-full flex flex-col items-center">
+          <div class="size-16 bg-purple-600/10 border border-purple-600/20 rounded-2xl flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-3xl text-purple-600">email</span>
+          </div>
+          <h3 class="font-black text-xl mb-2">Email Support</h3>
+          <p class="text-sm text-slate-500 mb-6 flex-1">Send us a message and we'll reply within 2 hours.</p>
+          <button onclick="openEmail()" class="bg-purple-600 text-white font-black px-6 py-4 rounded-2xl hover:brightness-110 transition-all text-sm w-full shadow-lg shadow-purple-600/20">Send Email</button>
+        </div>
+
+        <!-- Call Card -->
+        <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center hover:shadow-xl transition-all w-full flex flex-col items-center">
+          <div class="size-16 bg-green-600/10 border border-green-600/20 rounded-2xl flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-3xl text-green-600">phone</span>
+          </div>
+          <h3 class="font-black text-xl mb-2">Call Us</h3>
+          <p class="text-sm text-slate-500 mb-6 flex-1">Speak with a support agent anytime, 24/7.</p>
+          <a href="tel:+91XXXXXXXXXX" class="bg-green-600 text-white font-black px-6 py-4 rounded-2xl hover:brightness-110 transition-all text-sm w-full shadow-lg shadow-green-600/20">Call Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Live Chat Modal -->
+  <div id="chat-modal" class="hidden fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center backdrop-blur-sm p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in-up h-[600px] max-h-[90vh]">
+      <!-- Header -->
+      <div class="bg-blue-600 p-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-3xl">smart_toy</span>
+          <div>
+            <h3 class="font-bold">Smart Grocery AI Support</h3>
+            <p class="text-xs text-blue-200">Online &bull; Ask me about your orders</p>
+          </div>
+        </div>
+        <button onclick="toggleChatModal()" class="hover:bg-white/20 p-2 rounded-full transition-colors flex items-center">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <!-- Chat Area -->
+      <div id="chat-messages" class="flex-1 bg-slate-50 p-4 overflow-y-auto space-y-4">
+        <!-- Bot Message Template -->
+        <div class="flex gap-2 mr-12">
+          <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-blue-600 text-sm">smart_toy</span>
+          </div>
+          <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm text-sm text-slate-700 shadow-sm">
+            Hi! I'm the Smart Grocery AI assistant. How can I help you today? You can ask me to check an order status by order ID!
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="p-4 bg-white border-t border-slate-100">
+        <form id="chat-form" class="flex gap-2" onsubmit="event.preventDefault(); sendChatMessage();">
+          <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none text-sm" required autocomplete="off" />
+          <button type="submit" class="bg-blue-600 text-white px-4 py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined">send</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Form Modal -->
+  <div id="email-modal" class="hidden fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center backdrop-blur-sm p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in-up">
+      <div class="bg-purple-600 p-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-3xl">email</span>
+          <div>
+            <h3 class="font-bold">Send an Email</h3>
+            <p class="text-xs text-purple-200">We'll get back to you shortly</p>
+          </div>
+        </div>
+        <button onclick="toggleEmailForm()" class="hover:bg-white/20 p-2 rounded-full transition-colors flex items-center">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="p-6">
+        <form id="email-form" onsubmit="event.preventDefault(); submitEmailForm();" class="space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">Subject</label>
+            <input type="text" id="email-subject" class="w-full border border-slate-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600" required>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">Message</label>
+            <textarea id="email-message" rows="4" class="w-full border border-slate-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600" required></textarea>
+          </div>
+          <button type="submit" id="email-submit-btn" class="w-full bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700 transition">Send Message</button>
+        </form>
+        <div id="email-success" class="hidden text-green-600 text-center font-bold mt-4">
+          Message sent successfully!
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+function toggleFAQ(btn) {
+    const answer = btn.nextElementSibling;
+    const icon = btn.querySelector('.faq-icon');
+    const isOpen = !answer.classList.contains('hidden');
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
+    document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = '');
+    if (!isOpen) { answer.classList.remove('hidden'); icon.style.transform = 'rotate(180deg)'; }
+}
+function filterFAQ(tag) {
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.style.display = (item.dataset.tag === tag) ? '' : 'none';
+    });
+}
+document.getElementById('help-search').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.style.display = (!q || item.dataset.question.includes(q)) ? '' : 'none';
+    });
+});
+</script>
+<script>
+function openChat() {
+    window.scrollTo(0, 0);
+    toggleChatModal();
+}
+
+function openEmail() {
+    window.scrollTo(0, 0);
+    toggleEmailForm();
+}
+
+function toggleChatModal() {
+    const modal = document.getElementById('chat-modal');
+    modal.classList.toggle('hidden');
+    if (!modal.classList.contains('hidden')) {
+        document.getElementById('chat-input').focus();
+    }
+}
+
+function toggleEmailForm() {
+    const modal = document.getElementById('email-modal');
+    modal.classList.toggle('hidden');
+    if (!modal.classList.contains('hidden')) {
+        document.getElementById('email-form').reset();
+        document.getElementById('email-form').style.display = 'block';
+        document.getElementById('email-success').classList.add('hidden');
+    }
+}
+
+async function submitEmailForm() {
+    const subject = document.getElementById('email-subject').value;
+    const message = document.getElementById('email-message').value;
+    const btn = document.getElementById('email-submit-btn');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    try {
+        const res = await fetch('/api/support/email', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({subject, message})
+        });
+        if(res.ok) {
+            document.getElementById('email-form').style.display = 'none';
+            document.getElementById('email-success').classList.remove('hidden');
+        }
+    } catch(e) {
+        alert('Failed to send email.');
+    } finally {
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+    }
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    input.value = '';
+    const messagesDiv = document.getElementById('chat-messages');
+
+    messagesDiv.innerHTML += `
+        <div class="flex gap-2 ml-12 justify-end">
+          <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-sm text-sm shadow-sm whitespace-pre-wrap">${message.replace(/</g, "&lt;")}</div>
+        </div>
+    `;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    const loadingId = 'loading-' + Date.now();
+    messagesDiv.innerHTML += `
+        <div id="${loadingId}" class="flex gap-2 mr-12">
+          <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-blue-600 text-sm">smart_toy</span>
+          </div>
+          <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm text-sm text-slate-700 shadow-sm flex gap-1 items-center">
+            <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+            <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:0.1s"></div>
+            <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:0.2s"></div>
+          </div>
+        </div>
+    `;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    try {
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({message})
+        });
+        const data = await res.json();
+        const responseText = data.response || "Sorry, an error occurred.";
+        
+        document.getElementById(loadingId).remove();
+        
+        messagesDiv.innerHTML += `
+            <div class="flex gap-2 mr-12">
+              <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-blue-600 text-sm">smart_toy</span>
+              </div>
+              <div class="bg-white border border-slate-200 p-3 rounded-2xl rounded-tl-sm text-sm text-slate-700 shadow-sm whitespace-pre-wrap">${responseText.replace(/</g, "&lt;")}</div>
+            </div>
+        `;
+    } catch(e) {
+        document.getElementById(loadingId).remove();
+        messagesDiv.innerHTML += `
+            <div class="flex gap-2 mr-12">
+              <div class="bg-red-50 border border-red-200 p-3 rounded-2xl rounded-tl-sm text-sm text-red-700 shadow-sm">Error: AI temporarily unavailable or you are not logged in.</div>
+            </div>
+        `;
+    }
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+</script>
+{% endblock %}

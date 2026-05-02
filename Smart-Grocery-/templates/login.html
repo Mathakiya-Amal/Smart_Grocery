@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Login & Signup | Smart Grocery{% endblock %}
+
+{% block extra_styles %}
+    .login-container {
+        min-height: calc(100vh - 150px);
+    }
+{% endblock %}
+
+{% block content %}
+<main class="login-container flex flex-col items-center justify-center px-4 py-12 md:py-20">
+    <!-- Authentication Card -->
+    <div class="w-full max-w-md bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800 transition-all duration-300">
+        <div class="p-8">
+            <!-- Header Section -->
+            <div class="text-center mb-8">
+                <h1 id="form-title" class="text-3xl font-black text-slate-900 dark:text-white mb-2">Welcome Back</h1>
+                <p id="form-subtitle" class="text-slate-500 dark:text-gray-400 text-sm">Start Your Fresh Journey with Smart Grocery</p>
+            </div>
+
+            <!-- Error Message -->
+            {% if error %}
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl flex items-center gap-3 text-sm font-medium animate-shake">
+                <span class="material-symbols-outlined">error</span>
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Tab Switcher -->
+            <div class="flex p-1 bg-slate-100 dark:bg-zinc-800 rounded-2xl mb-8">
+                <button id="tab-login" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-bold rounded-xl bg-white dark:bg-zinc-700 text-slate-900 dark:text-white shadow-sm transition-all duration-300">
+                    Login
+                </button>
+                <button id="tab-signup" onclick="switchTab('signup')" class="flex-1 py-2 text-sm font-bold rounded-xl text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-200 transition-all duration-300">
+                    Sign Up
+                </button>
+            </div>
+
+            <!-- Form -->
+            <form id="auth-form" action="/login" method="POST" class="space-y-5">
+                <input type="hidden" name="action" id="form-action" value="login">
+                
+                <!-- Name Field (Hidden by default) -->
+                <div id="name-field" class="space-y-1.5 hidden">
+                    <label class="block text-sm font-bold text-slate-700 dark:text-gray-300" for="name">Full Name</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">person</span>
+                        <input class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400" name="name" id="name" placeholder="John Doe" type="text"/>
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="space-y-1.5">
+                    <label class="block text-sm font-bold text-slate-700 dark:text-gray-300" for="email">Email Address</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">mail</span>
+                        <input class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400" name="email" id="email" placeholder="name@example.com" required type="email"/>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-gray-300" for="password">Password</label>
+                        <a id="forgot-link" class="text-xs font-bold text-primary hover:underline" href="/forgot-password">Forgot?</a>
+                    </div>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">lock</span>
+                        <input class="w-full pl-10 pr-12 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400" name="password" id="password" placeholder="••••••••" required type="password"/>
+                        <button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-gray-200" type="button" onclick="togglePassword()">
+                            <span id="password-toggle-icon" class="material-symbols-outlined text-xl">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="submit-btn" class="w-full py-4 bg-primary hover:brightness-110 text-black font-black rounded-xl shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-2 mt-4" type="submit">
+                    <span id="submit-text">Login to Dashboard</span>
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="bg-slate-50 dark:bg-zinc-800/50 p-6 text-center border-t border-slate-100 dark:border-zinc-800 space-y-3">
+            <p class="text-sm text-slate-600 dark:text-gray-400">
+                <span id="footer-text">Don't have an account?</span> 
+                <button type="button" onclick="toggleMode()" id="toggle-btn" class="text-primary font-black hover:underline ml-1">Sign up for free</button>
+            </p>
+            <!-- Staff Login Link -->
+            <div class="pt-2 border-t border-slate-200 dark:border-zinc-700">
+                <a href="/vendor/login" class="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors group">
+                    <span class="material-symbols-outlined text-[15px] group-hover:text-primary transition-colors">admin_panel_settings</span>
+                    <span>Staff / Vendor / Admin Login</span>
+                    <span class="material-symbols-outlined text-[13px] group-hover:translate-x-0.5 transition-transform">arrow_forward_ios</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function switchTab(mode) {
+        const loginTab = document.getElementById('tab-login');
+        const signupTab = document.getElementById('tab-signup');
+        const nameField = document.getElementById('name-field');
+        const formAction = document.getElementById('form-action');
+        const formTitle = document.getElementById('form-title');
+        const formSubtitle = document.getElementById('form-subtitle');
+        const submitText = document.getElementById('submit-text');
+        const forgotLink = document.getElementById('forgot-link');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const footerText = document.getElementById('footer-text');
+
+        if (mode === 'signup') {
+            signupTab.classList.add('bg-white', 'dark:bg-zinc-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+            signupTab.classList.remove('text-slate-500', 'dark:text-gray-400');
+            loginTab.classList.remove('bg-white', 'dark:bg-zinc-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+            loginTab.classList.add('text-slate-500', 'dark:text-gray-400');
+            
+            signupTab.parentElement.classList.add('rounded-2xl');
+            signupTab.parentElement.classList.remove('rounded-xl');
+            
+            nameField.classList.remove('hidden');
+            document.getElementById('name').required = true;
+            formAction.value = 'signup';
+            formTitle.textContent = 'Create Account';
+            formSubtitle.textContent = 'Join the Smart Grocery family today';
+            submitText.textContent = 'Create My Account';
+            forgotLink.classList.add('hidden');
+            toggleBtn.textContent = 'Login here';
+            footerText.textContent = 'Already have an account?';
+        } else {
+            loginTab.classList.add('bg-white', 'dark:bg-zinc-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+            loginTab.classList.remove('text-slate-500', 'dark:text-gray-400');
+            signupTab.classList.remove('bg-white', 'dark:bg-zinc-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+            signupTab.classList.add('text-slate-500', 'dark:text-gray-400');
+
+            nameField.classList.add('hidden');
+            document.getElementById('name').required = false;
+            formAction.value = 'login';
+            formTitle.textContent = 'Welcome Back';
+            formSubtitle.textContent = 'Start Your Fresh Journey with Smart Grocery';
+            submitText.textContent = 'Login to Dashboard';
+            forgotLink.classList.remove('hidden');
+            toggleBtn.textContent = 'Sign up for free';
+            footerText.textContent = "Don't have an account?";
+        }
+    }
+
+    function toggleMode() {
+        const mode = document.getElementById('form-action').value;
+        switchTab(mode === 'login' ? 'signup' : 'login');
+    }
+
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('password-toggle-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = 'visibility_off';
+        } else {
+            input.type = 'password';
+            icon.textContent = 'visibility';
+        }
+    }
+</script>
+<style>
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    .animate-shake { animation: shake 0.4s ease-in-out 0s 2; }
+</style>
+{% endblock %}

@@ -1,0 +1,52 @@
+The grocery e-commerce website already has a working frontend UI and backend with login, signup, product listing, cart, and order functionality. I now want to **add an AI-based recommendation system** that personalizes the homepage for returning users.
+
+Please implement an **AI-powered recommendation feature** with the following behavior:
+
+1. **User Purchase Tracking**
+
+   * Store every completed order in the database.
+   * Maintain a purchase history for each user.
+   * Track which products the user buys and how frequently they buy them.
+
+2. **Recommendation Model**
+
+   * Implement a simple machine learning or AI model to recommend products.
+   * The model should analyze the user's purchase history and identify frequently purchased items.
+   * You may use any suitable model or technique such as:
+
+     * collaborative filtering
+     * content-based recommendation
+     * frequency-based recommendation
+     * a lightweight machine learning model (for example using Python ML libraries or another suitable AI framework).
+
+3. **Returning User Personalization**
+
+   * When a user logs in again with the same account:
+
+     * The system should automatically analyze their previous order data.
+     * The AI model should predict what items the user is likely to need again.
+
+4. **Dynamic Homepage Recommendations**
+
+   * The homepage should display a section called **“Recommended for You”**.
+   * This section should show products that the user frequently buys or is likely to buy again.
+   * The recommended products should update dynamically whenever the user logs in.
+
+5. **Example Scenario**
+
+   * If a user frequently orders milk, bread, and eggs, the recommendation system should prioritize these items and similar grocery products.
+   * If the user logs in after several days, the homepage should immediately show these items in the recommendation section.
+
+6. **Integration with Existing System**
+
+   * Connect the recommendation engine with the existing user database and order history.
+   * Ensure recommendations are generated automatically when the user logs in.
+   * Send the recommended product list to the frontend so it appears on the homepage UI.
+
+7. **Project Structure**
+
+   * Create a separate module or file for the recommendation engine.
+   * Keep the AI logic separate from general backend logic for maintainability.
+
+Goal:
+Enhance the existing grocery e-commerce application with a **personalized AI recommendation system that suggests products based on each user's past purchasing behavior whenever they log in again.**

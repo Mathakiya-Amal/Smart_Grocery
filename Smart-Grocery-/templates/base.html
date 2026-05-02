@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{% block title %}Smart Grocery{% endblock %}</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.ico"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#13ec13",
+                "background-light": "#f6f8f6",
+                "background-dark": "#102210",
+            },
+            fontFamily: { "display": ["Work Sans"] },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.75rem",
+                "xl": "1rem",
+                "2xl": "1.5rem",
+                "full": "9999px"
+            },
+        },
+    },
+}
+</script>
+<style>
+body { font-family: 'Work Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+/* Global UI Polish */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+.rounded-card { border-radius: 1.5rem; }
+.rounded-btn { border-radius: 1rem; }
+.rounded-input { border-radius: 0.75rem; }
+
+{% block extra_styles %}{% endblock %}
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+
+<!-- Navigation -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+  <a href="/" class="flex items-center gap-2 shrink-0">
+    <div class="bg-primary p-1.5 rounded-lg text-white">
+      <span class="material-symbols-outlined block">shopping_basket</span>
+    </div>
+    <h2 class="text-xl font-black tracking-tight uppercase">Smart<span class="text-primary">Grocery</span></h2>
+  </a>
+  <nav class="hidden md:flex items-center gap-6">
+    <a href="/" class="text-sm font-medium hover:text-primary transition-colors {% if request.path == '/' %}text-primary border-b-2 border-primary{% endif %}">Home</a>
+    <a href="/products" class="text-sm font-medium hover:text-primary transition-colors {% if '/products' in request.path %}text-primary{% endif %}">Shop</a>
+    {% if logged_in and user_role == 'customer' %}
+    <a href="/orders" class="text-sm font-medium hover:text-primary transition-colors {% if '/orders' in request.path %}text-primary{% endif %}">Orders</a>
+    <a href="/wishlist" class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1 {% if '/wishlist' in request.path %}text-primary{% endif %}">
+      <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1;color:#ef4444">favorite</span> Wishlist
+    </a>
+    {% endif %}
+    {% if logged_in and user_role == 'vendor' %}
+    <a href="/vendor" class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1 {% if '/vendor' in request.path %}text-primary{% endif %}">
+      <span class="material-symbols-outlined text-[16px]">store</span> My Store
+    </a>
+    {% endif %}
+    {% if logged_in and user_role == 'admin' %}
+    <a href="/admin" class="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1 {% if '/admin' in request.path %}text-primary{% endif %}">
+      <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span> Admin
+    </a>
+    {% endif %}
+    <a href="/help" class="text-sm font-medium hover:text-primary transition-colors {% if '/help' in request.path %}text-primary{% endif %}">Help</a>
+  </nav>
+  <div class="flex items-center gap-3">
+    {% if logged_in %}
+    {% if user_role == 'customer' %}
+    <!-- Wishlist Icon -->
+    <a href="/wishlist" class="relative p-2 hover:bg-slate-100 rounded-lg transition-colors" title="My Wishlist">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;color:#ef4444">favorite</span>
+      <span id="wish-badge" class="hidden absolute top-1 right-1 bg-red-500 text-[10px] font-bold text-white w-4 h-4 rounded-full flex items-center justify-center">0</span>
+    </a>
+    <!-- Cart Icon -->
+    <a href="/cart" class="relative p-2 hover:bg-slate-100 rounded-lg transition-colors">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      {% if cart_count > 0 %}
+      <span id="cart-badge" class="absolute top-1 right-1 bg-primary text-[10px] font-bold text-white w-4 h-4 rounded-full flex items-center justify-center">{{ cart_count }}</span>
+      {% else %}
+      <span id="cart-badge" class="hidden absolute top-1 right-1 bg-primary text-[10px] font-bold text-white w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      {% endif %}
+    </a>
+    {% endif %}
+    {% if user_role == 'vendor' %}
+    <a href="/vendor" class="hidden sm:flex items-center gap-1.5 bg-primary/10 border border-primary/30 text-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-black transition-all">
+      <span class="material-symbols-outlined text-[16px]">dashboard</span> Dashboard
+    </a>
+    {% endif %}
+    {% if user_role == 'admin' %}
+    <a href="/admin" class="hidden sm:flex items-center gap-1.5 bg-primary/10 border border-primary/30 text-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-primary hover:text-black transition-all">
+      <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span> Admin
+    </a>
+    {% endif %}
+    <a href="/profile" class="p-2 hover:bg-slate-100 rounded-lg transition-colors" title="{{ user }}">
+      <span class="material-symbols-outlined">person</span>
+    </a>
+    <a href="/logout" class="hidden sm:block text-sm font-medium text-red-500 hover:text-red-700 transition-colors">Logout</a>
+    {% else %}
+    <a href="/login" class="bg-primary text-black px-4 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">Login</a>
+    {% endif %}
+  </div>
+</div>
+</header>
+
+{% block content %}{% endblock %}
+
+<footer class="bg-slate-900 text-slate-300 py-10 px-6 mt-12">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary">shopping_basket</span>
+    <span class="font-black text-white uppercase">Smart<span class="text-primary">Grocery</span></span>
+  </div>
+  <div class="flex gap-6 text-sm">
+    <a href="/help" class="hover:text-primary transition-colors">Help Center</a>
+    <a href="#" class="hover:text-primary transition-colors">Privacy</a>
+    <a href="#" class="hover:text-primary transition-colors">Terms</a>
+  </div>
+  <p class="text-xs text-slate-500">© 2024 Smart Grocery. All rights reserved.</p>
+</div>
+</footer>
+
+<script>
+function updateCartBadge(count) {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+    if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+    } else {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+    }
+}
+
+async function addToCart(productId) {
+    const resp = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({product_id: productId})
+    });
+    if (resp.status === 302 || resp.redirected) {
+        window.location.href = '/login';
+        return;
+    }
+    const data = await resp.json();
+    if (data.success) {
+        updateCartBadge(data.cart_count);
+        showToast('Added to cart!');
+    }
+}
+
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-full text-sm font-bold shadow-xl z-[100] flex items-center gap-2';
+    t.innerHTML = '<span class="material-symbols-outlined text-primary text-base">check_circle</span>' + msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+}
+</script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard – Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{"primary":"#13ec13"},fontFamily:{"display":["Work Sans"]}}}}</script>
+<style>
+body{font-family:'Work Sans',sans-serif}
+.sidebar-link.active{background:rgba(19,236,19,0.15);color:#13ec13;border-left:3px solid #13ec13}
+.sidebar-link:not(.active):hover{background:rgba(255,255,255,0.05)}
+.glow{box-shadow:0 0 40px rgba(19,236,19,0.15)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.4s ease-out forwards}
+.stat-gradient-green{background:linear-gradient(135deg,rgba(19,236,19,0.15),rgba(19,236,19,0.05))}
+.stat-gradient-blue{background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(59,130,246,0.05))}
+.stat-gradient-purple{background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(168,85,247,0.05))}
+.stat-gradient-orange{background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(249,115,22,0.05))}
+.stat-gradient-red{background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05))}
+.stat-gradient-yellow{background:linear-gradient(135deg,rgba(234,179,8,0.15),rgba(234,179,8,0.05))}
+option { background-color: #080f08; color: #fff; padding: 10px; }
+select:focus { border-color: #13ec13 !important; }
+</style>
+</head>
+<body class="bg-[#080f08] text-white min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-64 bg-[#0a150a] border-r border-white/10 flex flex-col shrink-0 sticky top-0 h-screen overflow-y-auto">
+  <div class="p-6 border-b border-white/10">
+    <a href="/" class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-black text-lg" style="font-variation-settings:'FILL' 1">admin_panel_settings</span>
+      </div>
+      <div>
+        <p class="font-black text-sm uppercase tracking-tight">Smart<span class="text-primary">Grocery</span></p>
+        <p class="text-[10px] text-white/40 uppercase tracking-widest">Admin Panel</p>
+      </div>
+    </a>
+  </div>
+
+  <div class="p-4 border-b border-white/10">
+    <div class="flex items-center gap-3 p-3 rounded-xl bg-primary/10 border border-primary/20">
+      <div class="w-10 h-10 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1">shield_person</span>
+      </div>
+      <div class="min-w-0">
+        <p class="font-bold text-sm truncate">{{ user }}</p>
+        <span class="text-[10px] font-bold uppercase bg-primary/30 text-primary px-2 py-0.5 rounded-full">Administrator</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="p-3 flex-1 space-y-1">
+    <p class="text-[10px] uppercase tracking-widest text-white/30 px-3 py-2 font-bold">System</p>
+    <a href="/admin" class="sidebar-link {% if active=='overview' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">dashboard</span> Overview
+    </a>
+
+    <p class="text-[10px] uppercase tracking-widest text-white/30 px-3 py-2 font-bold mt-4">Management</p>
+    <a href="/admin/users" class="sidebar-link {% if active=='users' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">group</span> Users
+    </a>
+    <a href="/admin/products" class="sidebar-link {% if active=='products' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">inventory_2</span> Products
+    </a>
+    <a href="/admin/orders" class="sidebar-link {% if active=='orders' %}active{% endif %} flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px]">receipt_long</span> Orders
+    </a>
+
+    <p class="text-[10px] uppercase tracking-widest text-white/30 px-3 py-2 font-bold mt-4">Quick Filters</p>
+    <a href="/admin/products?status=pending" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px] text-yellow-400">pending</span> Pending Products
+      {% if pending_products|default(0) > 0 %}<span class="ml-auto bg-yellow-500/20 text-yellow-400 text-[10px] font-bold px-2 py-0.5 rounded-full">{{ pending_products }}</span>{% endif %}
+    </a>
+    <a href="/admin/users?role=vendor" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 transition-all">
+      <span class="material-symbols-outlined text-[20px] text-blue-400">store</span> All Vendors
+    </a>
+  </nav>
+
+  <div class="p-4 border-t border-white/10 space-y-1">
+    <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all">
+      <span class="material-symbols-outlined text-[20px]">storefront</span> View Store
+    </a>
+    <a href="/logout" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500/10 transition-all">
+      <span class="material-symbols-outlined text-[20px]">logout</span> Sign Out
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="flex-1 flex flex-col overflow-y-auto">
+
+  <!-- Topbar -->
+  <header class="sticky top-0 z-30 bg-[#080f08]/95 backdrop-blur border-b border-white/10 px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      {% if active == 'overview' %}<h1 class="font-bold text-lg">System Overview</h1>
+      {% elif active == 'users' %}<h1 class="font-bold text-lg">User Management</h1>
+      {% elif active == 'products' %}<h1 class="font-bold text-lg">Product Management</h1>
+      {% elif active == 'orders' %}<h1 class="font-bold text-lg">Order Management</h1>
+      {% endif %}
+    </div>
+    <div class="flex items-center gap-3">
+      {% if active == 'overview' %}
+      <a href="/admin/export/revenue" class="flex items-center gap-1.5 bg-primary/10 border border-primary/20 text-primary text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-primary hover:text-black transition-all" title="Download Revenue CSV">
+        <span class="material-symbols-outlined text-[16px]">download</span> Revenue CSV
+      </a>
+      {% elif active == 'orders' %}
+      <a href="/admin/export/orders" class="flex items-center gap-1.5 bg-primary/10 border border-primary/20 text-primary text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-primary hover:text-black transition-all" title="Download Orders CSV">
+        <span class="material-symbols-outlined text-[16px]">download</span> Export CSV
+      </a>
+      {% endif %}
+      <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+      <span class="text-xs text-primary font-bold">System Online</span>
+    </div>
+  </header>
+
+  <main class="flex-1 p-8 fade-in">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    {% if active == 'overview' %}
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+      <div class="stat-gradient-green rounded-2xl border border-primary/20 p-4 glow">
+        <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1">group</span>
+        </div>
+        <p class="text-3xl font-black text-primary">{{ total_customers }}</p>
+        <p class="text-xs text-white/40 mt-1 font-medium">Customers</p>
+      </div>
+      <div class="stat-gradient-blue rounded-2xl border border-blue-500/20 p-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-blue-400" style="font-variation-settings:'FILL' 1">store</span>
+        </div>
+        <p class="text-3xl font-black text-blue-400">{{ total_vendors }}</p>
+        <p class="text-xs text-white/40 mt-1 font-medium">Vendors</p>
+      </div>
+      <div class="stat-gradient-purple rounded-2xl border border-purple-500/20 p-4">
+        <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-purple-400" style="font-variation-settings:'FILL' 1">inventory_2</span>
+        </div>
+        <p class="text-3xl font-black text-purple-400">{{ total_products }}</p>
+        <p class="text-xs text-white/40 mt-1 font-medium">Products</p>
+      </div>
+      <div class="stat-gradient-orange rounded-2xl border border-orange-500/20 p-4">
+        <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-orange-400" style="font-variation-settings:'FILL' 1">receipt_long</span>
+        </div>
+        <p class="text-3xl font-black text-orange-400">{{ total_orders }}</p>
+        <p class="text-xs text-white/40 mt-1 font-medium">Orders</p>
+      </div>
+      <div class="stat-gradient-yellow rounded-2xl border border-yellow-500/20 p-4 col-span-2">
+        <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-3">
+          <span class="material-symbols-outlined text-yellow-400" style="font-variation-settings:'FILL' 1">payments</span>
+        </div>
+        <p class="text-3xl font-black text-yellow-400">${{ "%.2f"|format(total_revenue) }}</p>
+        <p class="text-xs text-white/40 mt-1 font-medium">Total Revenue</p>
+      </div>
+    </div>
+
+    <!-- Chart Row -->
+    <div class="bg-[#0a150a] rounded-2xl border border-white/10 p-6 mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">monitoring</span>Revenue & Orders Trend</h3>
+          <p class="text-xs text-white/40 mt-1">Real-time dynamic data</p>
+        </div>
+        <div class="flex items-center gap-2 bg-white/5 p-1 rounded-xl">
+          <button onclick="updateAdminChart('7d')" id="btn-7d" class="chart-filter px-3 py-1.5 text-xs font-bold rounded-lg bg-primary/20 text-primary transition-all">7 Days</button>
+          <button onclick="updateAdminChart('1m')" id="btn-1m" class="chart-filter px-3 py-1.5 text-xs font-bold rounded-lg text-white/50 hover:text-white transition-all">1 Month</button>
+          <button onclick="updateAdminChart('1y')" id="btn-1y" class="chart-filter px-3 py-1.5 text-xs font-bold rounded-lg text-white/50 hover:text-white transition-all">1 Year</button>
+        </div>
+      </div>
+      <div class="w-full h-64">
+        <canvas id="adminChart"></canvas>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+      <!-- Recent Orders -->
+      <div class="bg-[#0a150a] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
+          <h3 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-orange-400" style="font-variation-settings:'FILL' 1">receipt_long</span>Recent Orders</h3>
+          <a href="/admin/orders" class="text-primary text-xs font-bold hover:underline">View all →</a>
+        </div>
+        <div class="divide-y divide-white/5">
+          {% for o in recent_orders %}
+          <div class="flex items-center gap-4 px-6 py-3">
+            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+              <span class="text-xs font-bold text-white/40">#{{ o.id }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-sm truncate">{{ o.customer_name }}</p>
+              <p class="text-xs text-white/30">{{ o.created_at[:10] }}</p>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-primary text-sm">${{ "%.2f"|format(o.total) }}</p>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded
+                {% if o.status == 'Delivered' %}bg-green-500/20 text-green-400
+                {% elif o.status == 'Out for Delivery' %}bg-blue-500/20 text-blue-400
+                {% elif o.status == 'Preparing' %}bg-yellow-500/20 text-yellow-400
+                {% else %}bg-white/10 text-white/50{% endif %}">
+                {{ o.status }}
+              </span>
+            </div>
+          </div>
+          {% else %}
+          <div class="px-6 py-8 text-center text-white/30 text-sm">No orders yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Recent Users -->
+      <div class="bg-[#0a150a] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
+          <h3 class="font-bold flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings:'FILL' 1">group</span>Recent Users</h3>
+          <a href="/admin/users" class="text-primary text-xs font-bold hover:underline">View all →</a>
+        </div>
+        <div class="divide-y divide-white/5">
+          {% for u in recent_users %}
+          <div class="flex items-center gap-4 px-6 py-3">
+            <div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+              <span class="text-xs font-bold text-primary">{{ u.name[0].upper() }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-sm truncate">{{ u.name }}</p>
+              <p class="text-xs text-white/30 truncate">{{ u.email }}</p>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full
+                {% if u.role == 'admin' %}bg-primary/20 text-primary
+                {% elif u.role == 'vendor' %}bg-blue-500/20 text-blue-400
+                {% else %}bg-white/10 text-white/50{% endif %}">
+                {{ u.role }}
+              </span>
+              {% if u.is_blocked %}<p class="text-[10px] text-red-400 mt-0.5">Blocked</p>{% endif %}
+            </div>
+          </div>
+          {% else %}
+          <div class="px-6 py-8 text-center text-white/30 text-sm">No users yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Row -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+      <!-- Top Selling Products -->
+      <div class="bg-[#0a150a] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="flex items-center gap-2 px-6 py-4 border-b border-white/10">
+          <span class="material-symbols-outlined text-[18px] text-yellow-400" style="font-variation-settings:'FILL' 1">emoji_events</span>
+          <h3 class="font-bold">Top Selling Products</h3>
+          <span class="ml-auto text-[10px] text-white/30 font-medium">All-time</span>
+        </div>
+        {% if top_products|default([]) %}
+        <div class="p-5 space-y-4">
+          {% for p in top_products %}
+          {% set max_sold = top_products[0].total_sold if top_products[0].total_sold else 1 %}
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-9 h-9 rounded-xl overflow-hidden bg-white/5 shrink-0">
+                <img src="{{ p.image_url }}" class="w-full h-full object-cover"/>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold truncate">{{ p.name }}</p>
+                <p class="text-[10px] text-white/40">{{ p.category }}</p>
+              </div>
+              <div class="text-right shrink-0">
+                <p class="text-sm font-bold text-yellow-400">{{ p.total_sold }} units</p>
+                <p class="text-[10px] text-white/40">${{ "%.0f"|format(p.revenue) }}</p>
+              </div>
+            </div>
+            <div class="h-1.5 bg-white/5 rounded-full">
+              <div class="h-full bg-gradient-to-r from-yellow-400 to-primary rounded-full"
+                   style="width: {{ [(p.total_sold / max_sold * 100)|int, 100]|min }}%"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="px-6 py-10 text-center text-white/30 text-sm">
+          <span class="material-symbols-outlined text-4xl text-white/10 block mb-2">bar_chart</span>No sales data yet
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Top Performing Vendors -->
+      <div class="bg-[#0a150a] rounded-2xl border border-white/10 overflow-hidden">
+        <div class="flex items-center gap-2 px-6 py-4 border-b border-white/10">
+          <span class="material-symbols-outlined text-[18px] text-blue-400" style="font-variation-settings:'FILL' 1">storefront</span>
+          <h3 class="font-bold">Top Vendors</h3>
+          <span class="ml-auto text-[10px] text-white/30 font-medium">By revenue</span>
+        </div>
+        {% if top_vendors|default([]) %}
+        <div class="divide-y divide-white/5">
+          {% for v in top_vendors %}
+          <div class="flex items-center gap-4 px-6 py-4">
+            <div class="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+              <span class="font-black text-blue-400 text-sm">{{ v.name[0].upper() }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm truncate">{{ v.name }}</p>
+              <p class="text-[10px] text-white/40">{{ v.product_count }} products · {{ v.order_count }} orders</p>
+            </div>
+            <div class="text-right">
+              <p class="font-black text-primary text-sm">${{ "%.2f"|format(v.revenue) }}</p>
+              <p class="text-[10px] text-white/40">Revenue</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="px-6 py-10 text-center text-white/30 text-sm">
+          <span class="material-symbols-outlined text-4xl text-white/10 block mb-2">store</span>No vendor data yet
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+
+    <!-- ═══ USERS ═══ -->
+    {% elif active == 'users' %}
+    <!-- Filters -->
+    <form method="GET" action="/admin/users" class="flex flex-wrap items-center gap-3 mb-6">
+      <input type="text" name="search" value="{{ search or '' }}" placeholder="Search name or email…" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary outline-none w-64"/>
+      <select name="role" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary outline-none" onchange="this.form.submit()">
+        <option value="">All Roles</option>
+        <option value="customer" {% if role_filter=='customer' %}selected{% endif %}>Customers</option>
+        <option value="vendor" {% if role_filter=='vendor' %}selected{% endif %}>Vendors</option>
+        <option value="admin" {% if role_filter=='admin' %}selected{% endif %}>Admins</option>
+      </select>
+      <button type="submit" class="bg-primary text-black font-bold px-5 py-2.5 rounded-xl text-sm hover:brightness-110 transition">Search</button>
+      <span class="text-white/40 text-sm">{{ users|length }} result(s)</span>
+    </form>
+
+    <div class="bg-[#0a150a] rounded-2xl border border-white/10 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-white/10 text-white/40 text-xs uppercase tracking-wider">
+            <th class="text-left px-5 py-4">User</th>
+            <th class="text-left px-5 py-4 hidden md:table-cell">Email</th>
+            <th class="text-left px-5 py-4">Role</th>
+            <th class="text-left px-5 py-4 hidden sm:table-cell">Joined</th>
+            <th class="text-right px-5 py-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          {% for u in users %}
+          <tr class="hover:bg-white/3 transition-colors">
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0
+                  {% if u.role == 'admin' %}bg-primary/20 text-primary border border-primary/30
+                  {% elif u.role == 'vendor' %}bg-blue-500/20 text-blue-400 border border-blue-500/30
+                  {% else %}bg-white/10 text-white/60{% endif %}">
+                  {{ u.name[0].upper() }}
+                </div>
+                <div>
+                  <p class="font-semibold">{{ u.name }}</p>
+                  {% if u.is_blocked %}<span class="text-[10px] text-red-400 font-bold">● Blocked</span>{% endif %}
+                </div>
+              </div>
+            </td>
+            <td class="px-5 py-4 text-white/50 hidden md:table-cell text-xs">{{ u.email }}</td>
+            <td class="px-5 py-4">
+              <span class="text-[11px] font-bold px-2 py-1 rounded-full
+                {% if u.role == 'admin' %}bg-primary/20 text-primary
+                {% elif u.role == 'vendor' %}bg-blue-500/20 text-blue-400
+                {% else %}bg-white/10 text-white/50{% endif %}">
+                {{ u.role }}
+              </span>
+            </td>
+            <td class="px-5 py-4 text-white/40 text-xs hidden sm:table-cell">{{ u.created_at[:10] }}</td>
+            <td class="px-5 py-4">
+              <div class="flex items-center justify-end gap-2 flex-wrap">
+                <!-- Role -->
+                <form method="POST" action="/admin/users/{{ u.id }}/role" class="flex items-center gap-1">
+                  <select name="role" class="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-xs text-white focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+                    {% for r in ['customer','vendor','admin'] %}
+                    <option value="{{ r }}" {% if u.role == r %}selected{% endif %}>{{ r|title }}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="submit" class="bg-primary/20 text-primary border border-primary/30 text-xs px-3 py-1.5 rounded-xl hover:bg-primary hover:text-black transition font-bold">Set</button>
+                </form>
+                <!-- Block/Unblock -->
+                <form method="POST" action="/admin/users/{{ u.id }}/block">
+                  <button class="{% if u.is_blocked %}bg-green-500/20 text-green-400 border-green-500/30{% else %}bg-yellow-500/20 text-yellow-400 border-yellow-500/30{% endif %} border text-xs px-3 py-1.5 rounded-xl hover:opacity-80 transition font-bold">
+                    {{ 'Unblock' if u.is_blocked else 'Block' }}
+                  </button>
+                </form>
+                <!-- Delete -->
+                <form method="POST" action="/admin/users/{{ u.id }}/delete" onsubmit="return confirm('Delete this user?')">
+                  <button class="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-3 py-1.5 rounded-xl hover:opacity-80 transition font-bold">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" class="text-center py-12 text-white/30">No users found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- ═══ PRODUCTS ═══ -->
+    {% elif active == 'products' %}
+    <form method="GET" action="/admin/products" class="flex flex-wrap items-center gap-3 mb-6">
+      <input type="text" name="search" value="{{ search or '' }}" placeholder="Search products…" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary outline-none w-64"/>
+      <select name="status" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary outline-none" onchange="this.form.submit()">
+        <option value="">All Products</option>
+        <option value="approved" {% if status_filter=='approved' %}selected{% endif %}>Approved</option>
+        <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending Approval</option>
+      </select>
+      <button type="submit" class="bg-primary text-black font-bold px-5 py-2.5 rounded-xl text-sm hover:brightness-110 transition">Search</button>
+      <span class="text-white/40 text-sm">{{ products|length }} result(s)</span>
+    </form>
+
+    <div class="bg-[#0a150a] rounded-2xl border border-white/10 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-white/10 text-white/40 text-xs uppercase tracking-wider">
+            <th class="text-left px-5 py-4">Product</th>
+            <th class="text-left px-5 py-4 hidden lg:table-cell">Category</th>
+            <th class="text-left px-5 py-4 hidden md:table-cell">Vendor</th>
+            <th class="text-left px-5 py-4">Price</th>
+            <th class="text-left px-5 py-4">Status</th>
+            <th class="text-right px-5 py-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          {% for p in products %}
+          <tr class="hover:bg-white/3 transition-colors">
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-white/5 shrink-0">
+                  <img src="{{ p.image_url }}" class="w-full h-full object-cover"/>
+                </div>
+                <div>
+                  <p class="font-semibold text-sm">{{ p.name }}</p>
+                  <p class="text-xs text-white/40">{{ p.brand }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-5 py-4 text-white/50 hidden lg:table-cell text-xs">{{ p.category }}</td>
+            <td class="px-5 py-4 hidden md:table-cell">
+              {% if p.vendor_name %}
+              <span class="text-xs font-medium text-blue-400">{{ p.vendor_name }}</span>
+              {% else %}
+              <span class="text-xs text-white/30">Platform</span>
+              {% endif %}
+            </td>
+            <td class="px-5 py-4">
+              <p class="font-bold text-primary">${{ "%.2f"|format(p.price) }}</p>
+            </td>
+            <td class="px-5 py-4">
+              <span class="text-[11px] font-bold px-2 py-1 rounded-full {% if p.is_approved %}bg-green-500/20 text-green-400{% else %}bg-yellow-500/20 text-yellow-400{% endif %}">
+                {{ 'Approved' if p.is_approved else 'Pending' }}
+              </span>
+            </td>
+            <td class="px-5 py-4">
+              <div class="flex items-center justify-end gap-2">
+                <form method="POST" action="/admin/products/{{ p.id }}/approve">
+                  <button class="{% if p.is_approved %}bg-yellow-500/20 text-yellow-400 border-yellow-500/30{% else %}bg-green-500/20 text-green-400 border-green-500/30{% endif %} border text-xs px-3 py-1.5 rounded-xl hover:opacity-80 transition font-bold">
+                    {{ 'Unapprove' if p.is_approved else 'Approve' }}
+                  </button>
+                </form>
+                <form method="POST" action="/admin/products/{{ p.id }}/delete" onsubmit="return confirm('Delete this product?')">
+                  <button class="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-3 py-1.5 rounded-xl hover:opacity-80 transition font-bold">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center py-12 text-white/30">No products found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- ═══ ORDERS ═══ -->
+    {% elif active == 'orders' %}
+    <form method="GET" action="/admin/orders" class="flex flex-wrap items-center gap-3 mb-6">
+      <select name="status" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-primary outline-none" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for s in ['pending','confirmed','shipped','delivered'] %}
+        <option value="{{ s }}" {% if status_filter == s %}selected{% endif %}>{{ s|title }}</option>
+        {% endfor %}
+      </select>
+      <span class="text-white/40 text-sm">{{ orders|length }} order group(s)</span>
+    </form>
+
+    <div class="space-y-5">
+      {% for og in orders %}
+      {% set overall = og.overall_status %}
+      <div class="bg-[#0a150a] rounded-2xl border border-white/10 overflow-hidden">
+        <!-- Group Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-white/10">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-bold text-white">Order Group #{{ og.id }}</span>
+              <span class="text-[10px] font-bold px-2.5 py-1 rounded-full
+                {% if overall == 'delivered' %}bg-green-500/20 text-green-400
+                {% elif overall == 'in transit' %}bg-blue-500/20 text-blue-400
+                {% elif overall == 'confirmed' %}bg-yellow-500/20 text-yellow-400
+                {% else %}bg-white/10 text-white/50{% endif %}">
+                {{ overall|title }}
+              </span>
+            </div>
+            <p class="text-xs text-white/40 mt-1">{{ og.customer_name }} · {{ og.customer_email }}</p>
+            <p class="text-xs text-white/30 mt-0.5">{{ og.created_at[:16] }}</p>
+            <p class="text-xs text-white/30 truncate max-w-xs mt-0.5">{{ og.address }}</p>
+          </div>
+          <p class="text-2xl font-black text-primary shrink-0">${{ "%.2f"|format(og.total_amount) }}</p>
+        </div>
+
+        <!-- Vendor Sub-Orders -->
+        <div class="divide-y divide-white/5">
+          {% for vo in og.vendor_orders %}
+          <div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="material-symbols-outlined text-[14px] text-primary/70" style="font-variation-settings:'FILL' 1">storefront</span>
+                <span class="font-bold text-sm">{{ vo.vendor_name }}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ml-1
+                  {% if vo.status == 'delivered' %}bg-green-500/20 text-green-400
+                  {% elif vo.status == 'shipped' %}bg-blue-500/20 text-blue-400
+                  {% elif vo.status == 'confirmed' %}bg-yellow-500/20 text-yellow-400
+                  {% else %}bg-white/10 text-white/50{% endif %}">
+                  {% if vo.status == 'shipped' %}In Transit{% else %}{{ vo.status|title }}{% endif %}
+                </span>
+              </div>
+              <p class="text-xs text-white/40">Sub-order #{{ vo.id }} · ${{ "%.2f"|format(vo.subtotal) }}</p>
+            </div>
+            <form method="POST" action="/admin/orders/{{ vo.id }}/status" class="flex items-center gap-2 shrink-0">
+              <select name="status" class="bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-xs text-white focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+                {% for s in ['pending','confirmed','shipped','delivered'] %}
+                <option value="{{ s }}" {% if vo.status == s %}selected{% endif %}>{{ s|title }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="bg-primary text-black font-black text-xs px-4 py-2 rounded-xl hover:brightness-110 transition whitespace-nowrap shadow-md shadow-primary/20">Update</button>
+            </form>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <div class="text-center py-16 bg-[#0a150a] rounded-2xl border border-dashed border-white/10">
+        <span class="material-symbols-outlined text-6xl text-white/10">receipt_long</span>
+        <p class="text-white/30 mt-3">No orders found.</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<script>
+let adminChartInstance = null;
+
+async function updateAdminChart(filter) {
+  // Update buttons
+  document.querySelectorAll('.chart-filter').forEach(btn => {
+    btn.className = 'chart-filter px-3 py-1.5 text-xs font-bold rounded-lg text-white/50 hover:text-white transition-all';
+  });
+  const activeBtn = document.getElementById('btn-' + filter);
+  if(activeBtn) {
+    activeBtn.className = 'chart-filter px-3 py-1.5 text-xs font-bold rounded-lg bg-primary/20 text-primary transition-all';
+  }
+
+  try {
+    const res = await fetch(`/api/admin/chart-data?filter=${filter}`);
+    const data = await res.json();
+
+    const ctx = document.getElementById('adminChart').getContext('2d');
+    
+    if (adminChartInstance) {
+      adminChartInstance.destroy();
+    }
+
+    Chart.defaults.color = 'rgba(255, 255, 255, 0.4)';
+    Chart.defaults.font.family = "'Work Sans', sans-serif";
+
+    adminChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [
+          {
+            label: 'Revenue ($)',
+            data: data.revenue,
+            borderColor: '#13ec13',
+            backgroundColor: 'rgba(19, 236, 19, 0.1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true,
+            yAxisID: 'y'
+          },
+          {
+            label: 'Orders',
+            data: data.orders,
+            borderColor: '#3b82f6',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.4,
+            borderDash: [5, 5],
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top', align: 'end', labels: { boxWidth: 12, usePointStyle: true, font: { size: 11, weight: 'bold' } } },
+          tooltip: { backgroundColor: 'rgba(10, 21, 10, 0.9)', titleColor: '#fff', bodyColor: '#fff', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, padding: 10 }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false } },
+          y: { type: 'linear', display: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false }, ticks: { callback: function(val) { return '$' + val; } } },
+          y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false } }
+        }
+      }
+    });
+  } catch (err) {
+    console.error("Failed to load chart data", err);
+  }
+}
+
+// Load chart on overview tab
+{% if active == 'overview' %}
+document.addEventListener('DOMContentLoaded', () => {
+  updateAdminChart('7d');
+});
+{% endif %}
+</script>
+</body>
+</html>

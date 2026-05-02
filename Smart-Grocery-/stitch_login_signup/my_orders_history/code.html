@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Orders History | Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav {
+            background-color: rgba(19, 236, 19, 0.15);
+            border-left: 4px solid #13ec13;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<!-- Header -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-10 py-3 shadow-sm">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">Smart Grocery</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Shop</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Deals</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Fresh</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Subscription</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 dark:bg-slate-800">
+<div class="text-slate-500 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent focus:ring-0 placeholder:text-slate-500 text-sm px-4" placeholder="Search orders..." value=""/>
+</div>
+</label>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="User profile avatar of John Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_SaSF2FZFMOXyobSI0D6SCzTQSR-EwRgAlRi-yT0-OJu7VXkY0Ha8_ENzlzLAH2uFH4p2jyyek2hMUIAYzfnVhRELYtCqR3GnC-n4oZfyb35a8e-sA0N9E3XLceWeA2jdRPUghZCk62MPioyq_8_MXMF2m7JunC5x5X1CuPsDfL0VGYpeO3bp8r1x-1dHQsk2d2cM4dwgFtKNrhl36St0ed0c9-PnZpkCTy-v8IIQsekulhiW8xdTQKFlytO53rgGFKz5uygGVA");'></div>
+</div>
+</header>
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-72 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col p-6 gap-8">
+<div class="flex gap-3 items-center px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" data-alt="Large user profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD0Vac8OBZodc-sx5Klz-gabFCNcbr9U19PqWYaAsFoULoXia16f7OeDMkQVvD2m5UBfN2-fDkudGCd4TU91FT-6ClVqxMSlEyrb_cu-PNdSi0uwQuRG_qTfeK1YyVXhZ2ly3EU_sDS_w_52iQBpS3XJLEyPu0Y1oAoNTyBsbB86ag2j7wGASn8YFkgN0isjc6Eqijj52KXeR_17IoIVnjtBgjMSaN-R4n1G3qjWi7r_T--TEpvAUFbedaL6v0ZUUmhgqGnYlYp5A");'></div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-white text-base font-semibold">John Doe</h1>
+<p class="text-primary text-xs font-medium uppercase tracking-wider">Premium Member</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">person</span>
+<span class="text-sm font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-900 dark:text-white active-nav rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined text-primary">package</span>
+<span class="text-sm font-semibold">Order History</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">location_on</span>
+<span class="text-sm font-medium">My Addresses</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">card_giftcard</span>
+<span class="text-sm font-medium">My Rewards</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">payments</span>
+<span class="text-sm font-medium">Payment Methods</span>
+</a>
+<hr class="my-4 border-slate-100 dark:border-slate-800"/>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Log Out</span>
+</a>
+</nav>
+<div class="mt-auto p-4 rounded-xl bg-primary/10 border border-primary/20">
+<p class="text-slate-900 dark:text-white text-sm font-bold mb-1">Save 20% on Fresh!</p>
+<p class="text-slate-600 dark:text-slate-400 text-xs mb-3">Upgrade to Smart+ for exclusive daily discounts.</p>
+<button class="w-full py-2 bg-primary text-slate-900 text-xs font-bold rounded-lg hover:brightness-110 transition-all">UPGRADE NOW</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 lg:p-12 max-w-5xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div class="flex flex-col gap-2">
+<h2 class="text-slate-900 dark:text-white text-4xl font-black tracking-tight">My Orders</h2>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Manage and track your previous grocery orders.</p>
+</div>
+<div class="flex gap-3 overflow-x-auto pb-2 md:pb-0">
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm text-sm font-medium">
+                        Last 3 Months <span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm text-sm font-medium">
+                        Status: All <span class="material-symbols-outlined text-lg">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Orders List -->
+<div class="flex flex-col gap-6">
+<!-- Order Card 1 (Delivered) -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4 bg-slate-50/50 dark:bg-slate-800/50">
+<div class="flex gap-8">
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Order Placed</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">Oct 24, 2023</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">$84.20</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Order #</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">ORD-7721</p>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">
+<span class="material-symbols-outlined text-base">check_circle</span>
+                            Delivered
+                        </div>
+</div>
+<div class="p-6">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+<div class="flex-1">
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium mb-4">Items in this order:</p>
+<div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Fresh green broccoli" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC1r9wC_005jXI5YGF9yWElXcdQgJ1LjRwbt22GRORVKZZfrwXsjQ4yLZwpVl0St8KnmLLVaD3gY4JBNx8jVZfBa3ZtXQeEVvXveacgTxgdCi5GpyZjRTjFEFqYe9ctnAwWqfO_qYJzT0yJbQpW748m8hcS-8rX2kquyw3MfaXMSXUwMVGSkkjXlBVXlJNEGav0lTVM229b9xbScpNUvLq7OLdsuv-KSCNtGCyeVG-Y-GLVEydZ1k_9BhpxLQaMz3_zciec_KMgMw");'></div>
+</div>
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Red apples in a basket" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZYMTPPrCeU7dTmz6jVxAZ98mPeWLUi7DiNjGsUALBcZO2sAshMSsZFV3kaPJ5Lak_NjrUGbB86IZYdgVe0rI8DVYxIjgpRY4_0kYhbVYMA8Q19FiD8aVBc4jwfOfpUJB5LuwG2ULPJbaSnYS_2kBF3gQcbWAP3ODVU44Q3wQE0S9MNcqhQ5idSdb8XMmgTq3-7BOi3czmVKqVkYJfAZsNm3XKqv7KJn8QL-O_Ec_CvQNkp_AwMM22OjhLZp7KnJpdNWufo31rbw");'></div>
+</div>
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Organic milk carton" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDoHF-v8Nmqxunle10iACUE26mZg-Vk5CMuQwhDdVQUJsCj7eOHc4dEHMHzvlx1J7kmoYk0BDPmmGvu6J8i4YstsND3ZgA_fa66WadElZ-Fan4IUNaPNiRDVupfOcM-PkRDwQjnyJXx8aXn_-C9HrOUbeN7HANsSg2OuiOa_eMwbdhWGRModHDf_gfblBIrOyjrOX_h9oa302dia0D44TBlsIMqKWU9_SBK4tgStgK3iZVuR5NybqKeCu6H0Nn1hUbSnnQoioCmWA");'></div>
+</div>
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Loaf of sourdough bread" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDTtRSs1inJbJWRAGONYFJrCFH9N2gGQeOxQeQARus3BdVigDLWghAOd1afRRx46nmOykkTLPSQMDQLJJ-bGLQFUPypwyTUrUiP6hfJH8G5gg7Eu_hiNwmahZSvV_hB5l_yFojK5SAgw5Rz9P7K1j5zhtguUCvbjG3bZ619lkRsOIWGhKMPl4rKesZ7wgjsQG6pRdx6nBrtnBuhsW1xr5DgbqAlV9yM1e_GkJshB0IITwpUJDIwjGqfd_VPj5Q4UfY9e-EOKpw9uA");'></div>
+</div>
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
+<span class="text-xs font-bold text-slate-500">+8 items</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row lg:flex-col gap-3 min-w-[160px]">
+<button class="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-slate-900 text-sm font-bold rounded-lg hover:brightness-105 transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">reorder</span>
+                                    Reorder
+                                </button>
+<button class="flex items-center justify-center gap-2 w-full py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Card 2 (In Transit) -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4 bg-slate-50/50 dark:bg-slate-800/50">
+<div class="flex gap-8">
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Order Placed</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">Today, 09:12 AM</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">$42.15</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Order #</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">ORD-8942</p>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-xs font-bold">
+<span class="material-symbols-outlined text-base">local_shipping</span>
+                            In Transit
+                        </div>
+</div>
+<div class="p-6">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+<div class="flex-1">
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium mb-4">Items in this order:</p>
+<div class="flex gap-3">
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Carton of fresh eggs" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKaLLkLwqm_FvjNnKG8MNwPAsxeTcR4N_lwikX4pRvsuMav0p3h87uIOL1LyAfrj6uT9VUZ_CjEgr7dLqWp4A_fJwcJR2_N-gUQYX_0uTCU7dnQTzdQhj72o_Atod_PrTj1_LpCHlVG5JrEb-gfK1uZh5hbYF8T2_bHe2AAJq0BfCC54sPKyZTH_yphYJmud0nOFCIVXCUN-M_xEYceagGtpZEQeoYbKz-5dEM35Wn_F-Jxl1dvOG1djUsPdRVS5LWRc2dw7VvDA");'></div>
+</div>
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Fresh organic carrots" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBE-NxiStlvIdaNJHti9XRQ_NwFtfxOwB5IkJTQoH-gNevjs2UtMJQ5XoY8yOetVu4GvSsSXdJhUOaYz_Zu6fKAGC1xEmDSbdjwL-uR7Pr3IrUH71lQTPnYWae_R_PS1-IEUO6og_1iq9Yofqdx-IfqYUgA3b9J1rJEa2Sl9wnmJKnJXni36mZ7g1dsyw4ONbEezQeUCdPliQfnQODMxxcQAciWwh6xCTEU2h1tb766UOqWK3W2eaVA_Wy-B6ocJcuU_GPH6O5PzA");'></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row lg:flex-col gap-3 min-w-[160px]">
+<button class="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-slate-900 text-sm font-bold rounded-lg hover:brightness-105 transition-all shadow-sm">
+                                    Track Order
+                                </button>
+<button class="flex items-center justify-center gap-2 w-full py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Card 3 (Delivered) -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-wrap justify-between items-center gap-4 bg-slate-50/50 dark:bg-slate-800/50">
+<div class="flex gap-8">
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Order Placed</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">Sep 18, 2023</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">$112.50</p>
+</div>
+<div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Order #</p>
+<p class="text-slate-900 dark:text-white text-sm font-semibold">ORD-5501</p>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">
+<span class="material-symbols-outlined text-base">check_circle</span>
+                            Delivered
+                        </div>
+</div>
+<div class="p-6">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+<div class="flex-1">
+<p class="text-slate-700 dark:text-slate-300 text-sm font-medium mb-4">Items in this order:</p>
+<div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Bunch of yellow bananas" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCWKmSQ62n1eN_f9uvzLXmJdHk_9G3DGYFXHxaJB8pT6oMXP267QJ2vbOWfbrfIVdurWW2XeY64VSsdYyn4ADzljGqMnevFdWlS4hS7OdlGxiUs4LrvjEGvgCnSAabsYX29psl-S9OXo4TJgP-MwWeRwv7dfrK8I1SCWNOlB_qMg9QsvuLGO2E5nIKVkK9xDkqiOZOWUv6iMGJ2xyFfRmNapJh8U8eJhX22opT2NSWHMzbKRyeWEf4erOUZkqMn0aXkmWBNKUsrhw");'></div>
+</div>
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Paper bag of various fresh vegetables" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBQjTxnV_TWr-Hco0yI1bfYTPROmjToQ-k3-WD-DxPkuggAoafqyMf-CDTSY53ZiuBOB0uwyC1XBz7Ltk0HBDA2vwpZPZOcQsePrmp0OmyTvp6wXUGQq7UxYLLfofjpOn-_HmCE5YDcaALvXczfeoAht2EN6dFOG1iW3E0rdlCq4EqM3v3jyP_CfR0QO4XMhRUYQOyFe5k0g0TzhhhLzDE4BphguYBMx0qRD9iksZ3FN4_x8GxBuM96A5bULSGcGnTxtE59s5xUDw");'></div>
+</div>
+<div class="h-16 w-16 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 flex-shrink-0">
+<div class="w-full h-full bg-cover bg-center rounded" data-alt="Greek yogurt tub" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA-MZ3NYaG5OU58-sg6AUmBwtv8q1DddfSy2tngf-OffM6-HRp2WHOBn2GG_TrrvIdCIzP2XlBX-V8jF2dY3rfH8nkfKsxnPFTN6IHgQkmBlo_np0rhJCq9X89rHSsS1UwmNVHrPp_kqDrhR2CEgXSrTv-nNsvx3y5Kf07MiSTIOS1KiLNDdEdhcMKU4O4_wnqeDtcdQPgKdwyebXBelh1y655kSZnvwi0Tos5MB_hqw-Ev3G9zwiL_1cWQ89176cXI0ozvlXqJsg");'></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row lg:flex-col gap-3 min-w-[160px]">
+<button class="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-slate-900 text-sm font-bold rounded-lg hover:brightness-105 transition-all shadow-sm">
+<span class="material-symbols-outlined text-lg">reorder</span>
+                                    Reorder
+                                </button>
+<button class="flex items-center justify-center gap-2 w-full py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-bold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+                                    View Details
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 flex items-center justify-center gap-2">
+<button class="flex items-center justify-center w-10 h-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 hover:text-primary transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg bg-primary text-slate-900 font-bold text-sm">1</button>
+<button class="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm hover:border-primary transition-colors">2</button>
+<button class="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm hover:border-primary transition-colors">3</button>
+<span class="px-2 text-slate-400">...</span>
+<button class="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm hover:border-primary transition-colors">12</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+</div>
+<!-- Footer for context -->
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12 px-10 mt-12">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-10">
+<div class="flex flex-col gap-4 max-w-sm">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-2xl font-bold">shopping_basket</span>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Smart Grocery</h3>
+</div>
+<p class="text-slate-500 text-sm leading-relaxed">
+                    The smartest way to stock your kitchen. Fresh produce, organic essentials, and everyday favorites delivered right to your door.
+                </p>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">call</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-10">
+<div class="flex flex-col gap-4">
+<h4 class="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-wider">Services</h4>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Groceries</a>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Subscription</a>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Business Solutions</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-wider">Company</h4>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">About Us</a>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Careers</a>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Blog</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-slate-900 dark:text-white font-bold text-sm uppercase tracking-wider">Support</h4>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Help Center</a>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Returns</a>
+<a class="text-slate-500 text-sm hover:text-primary" href="#">Contact</a>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto border-t border-slate-100 dark:border-slate-800 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-400 text-xs font-medium">
+<p>© 2023 Smart Grocery E-Commerce. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-slate-600" href="#">Privacy Policy</a>
+<a class="hover:text-slate-600" href="#">Terms of Service</a>
+<a class="hover:text-slate-600" href="#">Cookie Settings</a>
+</div>
+</div>
+</footer>
+</body></html>

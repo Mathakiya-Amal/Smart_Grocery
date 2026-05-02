@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% block title %}Smart Grocery - Freshness Delivered{% endblock %}
+{% block extra_styles %}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+@keyframes pulse-soft { 0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(19,236,19,0.4)} 50%{transform:scale(1.05);box-shadow:0 0 20px 10px rgba(19,236,19,0)} }
+@keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+.animate-float{animation:float 6s ease-in-out infinite}
+.animate-pulse-custom{animation:pulse-soft 2s infinite}
+.stagger-1{animation:slideUp 0.6s ease-out forwards}
+.stagger-2{animation:slideUp 0.6s ease-out 0.1s forwards;opacity:0}
+.stagger-3{animation:slideUp 0.6s ease-out 0.2s forwards;opacity:0}
+.stagger-4{animation:slideUp 0.6s ease-out 0.3s forwards;opacity:0}
+{% endblock %}
+{% block content %}
+<main class="max-w-7xl mx-auto px-6">
+  <!-- Hero -->
+  <section class="py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+    <div class="flex flex-col gap-8 stagger-1">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
+        <span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-primary">Farm to Table</span>
+      </div>
+      <h1 class="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight">
+        Freshness <br/><span class="text-primary">Delivered</span> <br/>Directly to You.
+      </h1>
+      <p class="text-lg text-slate-600 max-w-md leading-relaxed">Shop organic groceries from local farms. Lightning-fast delivery within 30 minutes to your doorstep.</p>
+      <div class="flex flex-wrap gap-4 pt-4">
+        <a href="/products" class="animate-pulse-custom flex items-center justify-center gap-2 px-8 py-4 bg-primary text-black rounded-xl font-bold text-lg hover:brightness-110 transition-all shadow-xl shadow-primary/20">
+          <span>Shop Now</span><span class="material-symbols-outlined">trending_flat</span>
+        </a>
+        {% if not logged_in %}
+        <a href="/login" class="flex items-center justify-center gap-2 px-8 py-4 bg-white border border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all">
+          <span>Sign In</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="relative animate-float">
+      <div class="absolute -inset-4 bg-primary/20 blur-3xl rounded-full"></div>
+      <div class="relative w-full aspect-square rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl">
+        <img alt="Fresh Produce Basket" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGTLBtI8ZCHOHSNcx-4oFt5WstFc9F61yIG9ByPxW4xnIKzorRB9jhgw6uKC01HTV5sVEiolZSmulROgBKkBYYwu_5_g618u5MsaC1endvv5_9WCgp2E-rOWYEnyTf3Q3wLyfHNH2yGop6KlTack7uyEwcQQxYFPB43P0tP0gs9V0hpppPrcMczhDejZfqZ73HkJJFav8FqBIeoau3RFASrPWZJENrhGPBM6jZS3uSo3AGwc29yrNScghe0FN7AjkfHAgqK-9Yiw"/>
+      </div>
+      <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4 animate-bounce" style="animation-duration:4s">
+        <div class="size-12 rounded-full bg-primary/20 flex items-center justify-center"><span class="material-symbols-outlined text-primary">bolt</span></div>
+        <div><p class="text-xs text-slate-500 font-medium">Fast Delivery</p><p class="text-sm font-bold">Under 30 Mins</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Recommendations -->
+  <section class="py-16" id="recommendations">
+
+    <!-- Header -->
+    <div class="flex items-end justify-between mb-6">
+      <div class="flex flex-col gap-2">
+        {% if logged_in and user_name %}
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
+          <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+          <span class="text-xs font-bold text-primary uppercase tracking-wider">AI Personalized</span>
+        </div>
+        <h2 class="text-3xl font-black tracking-tight">
+          Recommended for You{% if user_name %}, {{ user_name.split()[0] }}{% endif %}
+        </h2>
+        {% else %}
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 w-fit">
+          <span class="material-symbols-outlined text-slate-500 text-sm">trending_up</span>
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Trending Now</span>
+        </div>
+        <h2 class="text-3xl font-black tracking-tight">Popular This Week</h2>
+        {% endif %}
+        <div class="h-1.5 w-24 bg-primary rounded-full"></div>
+      </div>
+      <a href="/products" class="text-primary font-bold flex items-center gap-1 hover:gap-2 transition-all text-sm">
+        Browse All <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+      </a>
+    </div>
+
+    <!-- AI Insight Panel (only for users with order history) -->
+    {% if logged_in and purchase_summary and purchase_summary.order_count > 0 %}
+    <div class="mb-8 p-5 rounded-2xl bg-gradient-to-r from-primary/10 via-green-50 to-primary/5 border border-primary/20 flex flex-col sm:flex-row sm:items-center gap-5">
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="size-12 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/30">
+          <span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings:'FILL' 1">psychology</span>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">AI Engine Active</p>
+          <p class="font-black text-slate-900">Personalised for your taste</p>
+        </div>
+      </div>
+      <div class="h-px sm:h-10 sm:w-px bg-primary/20"></div>
+      <div class="flex flex-wrap gap-6 text-sm">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-lg">receipt_long</span>
+          <div><p class="text-slate-500 text-xs">Total Orders</p><p class="font-bold">{{ purchase_summary.order_count }}</p></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-lg">inventory_2</span>
+          <div><p class="text-slate-500 text-xs">Items Purchased</p><p class="font-bold">{{ purchase_summary.items_bought }}</p></div>
+        </div>
+        {% if purchase_summary.top_categories %}
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-lg">category</span>
+          <div>
+            <p class="text-slate-500 text-xs">Favourite Categories</p>
+            <p class="font-bold">{{ purchase_summary.top_categories | join(', ') }}</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <div class="sm:ml-auto shrink-0">
+        <div class="flex items-center gap-1.5 text-xs text-primary font-bold bg-primary/10 px-3 py-1.5 rounded-full">
+          <span class="size-1.5 rounded-full bg-primary animate-ping inline-block"></span>
+          Live recommendations
+        </div>
+      </div>
+    </div>
+    {% elif logged_in %}
+    <!-- First-time user nudge -->
+    <div class="mb-8 p-5 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex items-center gap-4">
+      <span class="material-symbols-outlined text-3xl text-slate-400">lightbulb</span>
+      <div>
+        <p class="font-bold text-slate-700">Your AI picks will appear here after your first order</p>
+        <p class="text-sm text-slate-500">Place an order and our engine will personalise your homepage automatically.</p>
+      </div>
+      <a href="/products" class="ml-auto shrink-0 bg-primary text-black font-bold px-4 py-2 rounded-xl text-sm hover:opacity-90 transition">Shop Now</a>
+    </div>
+    {% endif %}
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+      {% for product in recommendations %}
+      <div class="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-2 transition-all duration-500 flex flex-col">
+        <div class="relative aspect-square bg-slate-100 overflow-hidden">
+          <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="{{ product.image_url }}" alt="{{ product.name }}"/>
+
+          <!-- Product badge (Sale / Organic / New) -->
+          {% if product.badge %}
+          <div class="absolute top-2 left-2">
+            <span class="{% if product.badge == 'Sale' %}bg-red-500{% elif product.badge == 'New' %}bg-blue-500{% else %}bg-primary{% endif %} text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase shadow">{{ product.badge }}</span>
+          </div>
+          {% endif %}
+
+          <!-- AI reason badge (only when logged in) -->
+          {% if logged_in and product.reason %}
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent pt-4 pb-1.5 px-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+            <span class="text-[10px] font-bold text-primary flex items-center gap-1">
+              <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+              {{ product.reason }}
+            </span>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="p-3 flex flex-col flex-1">
+          <p class="text-xs text-slate-400 mb-0.5">{{ product.brand }}</p>
+          <h3 class="font-bold text-slate-800 text-sm line-clamp-2 mb-1 leading-snug">{{ product.name }}</h3>
+          <p class="text-xs text-slate-400">{{ product.unit }}</p>
+          <div class="mt-auto flex items-center justify-between pt-2">
+            <div>
+              <span class="font-bold text-slate-900">${{ "%.2f"|format(product.price) }}</span>
+              {% if product.original_price %}<span class="text-[11px] text-slate-400 line-through ml-1">${{ "%.2f"|format(product.original_price) }}</span>{% endif %}
+            </div>
+            <button onclick="addToCart({{ product.id }})" class="bg-primary hover:brightness-110 text-white w-9 h-9 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-primary/20 active:scale-95">
+              <span class="material-symbols-outlined text-sm font-bold">add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Explanation footer -->
+    {% if logged_in %}
+    <p class="mt-6 text-xs text-slate-400 flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-[14px]">info</span>
+      Recommendations update automatically based on your purchase history. Hover a card to see why it was suggested.
+    </p>
+    {% endif %}
+  </section>
+
+  <!-- Categories -->
+  <section class="py-16">
+    <div class="flex items-end justify-between mb-10">
+      <div><h2 class="text-3xl font-black tracking-tight">Shop by Category</h2><div class="h-1.5 w-24 bg-primary rounded-full mt-2"></div></div>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <a href="/products?category=Fresh+Produce" class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+        <img alt="Fresh Fruits" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfqzaeQgwPKJJsXzcOJoG0ZuuQFpADPmXqrfK-NPC3LzD_pxIcMNNBQFBHiHF-lpkVxN6Xa6FEzyyCG4Tf2eAtkp4Jy6JsOzEfb7Vrn3ZVns_aVUSE8xaIbLe_voJRf--ji-09dpZQKNxBh8jqae2ycV7z1ar1Tg2YL9KbVHJz6J8TNRniVqIEhJwaFbYsXH5jNzRBiNwVFo80f--J9Q_ka_kY4JCV8nzabh9YQUBFMyntC3CD51RMIlp74l4JQkGm2IltzaXNzg"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-6 left-6"><p class="text-white text-xl font-black uppercase">Fruits</p><p class="text-primary text-xs font-bold">45+ Varieties</p></div>
+      </a>
+      <a href="/products?category=Fresh+Produce" class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+        <img alt="Vegetables" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9oY1cAGFRhSHqaE3ESIqOA8s3_hPBC7cdCCml0Ph8WD4-H1AqyeIdDjFCLMOK_u4HPrDlOmxc6tswmB-nq4b3CSYKw0-Q8eD7Ey8_B-mpFgEUrgIPqwdn-Yr-2jkajL8c-NoViR5oHU0Z4VbB0FdY6aJdKTj74ueJNdX3qh-6yj88adn3JzdyoXGRRshalCzn16YlRM7x1Anm6J6RxSyvgFTDqPowt63neRVxYfcx6BejGg7K9pbuMmIzyBGCIuU8NCyrmkpE6w"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-6 left-6"><p class="text-white text-xl font-black uppercase">Vegetables</p><p class="text-primary text-xs font-bold">60+ Varieties</p></div>
+      </a>
+      <a href="/products?category=Dairy+%26+Eggs" class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+        <img alt="Dairy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeZ-M2KxHR7DL_rffkqynXZeOsChi9A9QTgM-t-UFXoV3bLnwqNh6QoPGBe2okASSqW6MEZAEc9R0ofv76Ejl1LxwxLKNwV3ES_ukYnIUHSqHKqssPvgiXAneyrcB02juOA72erPabKsdBH4RB-gNPfh0GmZfSSi0TtBUIJZAAnV0PgEqykFeNX9AJVVxsX0e-4dcZDJ2nhEN74j6e4SfqJaNYAu4WAZ50eI1ToQOypLUbGk7Gi-fmkZV-ZV-DCd0o7ujtNLoThw"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-6 left-6"><p class="text-white text-xl font-black uppercase">Dairy</p><p class="text-primary text-xs font-bold">20+ Varieties</p></div>
+      </a>
+      <a href="/products?category=Bakery" class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+        <img alt="Bakery" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAyAUP8LIFyG2vSwOWLxT3HWJK707TXdfVCfRCJewjYVRJaSHDBWFTlhKSmH-KAJeUjdlkB38eH-Jz1vWyafWrGwkz8gGwWdABZf7nSqyfvfZfp2TDjb0UAjlaK7gwXc4OM6ke-fH3gzDLIdmW4EliIbKNw1mQYGC1gTBT0DpVP4q78VVYd--mXoj99No7tMMi1vawoFV7mEiHWO5PYoh3dE0xrx9SNQawgDMKcnpUl_eVetOm_OtxJ5E_Wr9yUj448Ar-gBy6DQ"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-6 left-6"><p class="text-white text-xl font-black uppercase">Bakery</p><p class="text-primary text-xs font-bold">15+ Varieties</p></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Features Banner -->
+  <section class="py-12 bg-primary/10 rounded-[2rem] px-8 grid md:grid-cols-3 gap-8 mb-20">
+    <div class="flex items-center gap-4">
+      <div class="size-14 rounded-2xl bg-primary flex items-center justify-center text-background-dark"><span class="material-symbols-outlined text-3xl">verified</span></div>
+      <div><h4 class="font-bold">100% Organic</h4><p class="text-sm text-slate-600">Certified farm fresh goods</p></div>
+    </div>
+    <div class="flex items-center gap-4 border-y md:border-y-0 md:border-x border-primary/20 py-8 md:py-0 md:px-8">
+      <div class="size-14 rounded-2xl bg-primary flex items-center justify-center text-background-dark"><span class="material-symbols-outlined text-3xl">local_shipping</span></div>
+      <div><h4 class="font-bold">Free Delivery</h4><p class="text-sm text-slate-600">On all orders above $30</p></div>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="size-14 rounded-2xl bg-primary flex items-center justify-center text-background-dark"><span class="material-symbols-outlined text-3xl">support_agent</span></div>
+      <div><h4 class="font-bold">24/7 Support</h4><p class="text-sm text-slate-600">Dedicated customer care</p></div>
+    </div>
+  </section>
+</main>
+{% endblock %}

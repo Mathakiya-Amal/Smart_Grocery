@@ -1,0 +1,121 @@
+The grocery e-commerce website is already functional with frontend UI, backend, authentication, cart system, order management, and an AI-based recommendation system.
+
+Now I want to **extend the system by adding Vendor and Admin dashboards with role-based access control**, without breaking the existing functionality.
+
+Please implement the following:
+
+---
+
+1. **User Roles & Access Control**
+
+* Add role-based authentication with three roles:
+
+  * Customer (existing users)
+  * Vendor (product sellers)
+  * Admin (system manager)
+* Store user roles in the database.
+* After login, redirect users based on role:
+
+  * Customer → Homepage
+  * Vendor → Vendor Dashboard
+  * Admin → Admin Dashboard
+
+---
+
+2. **Vendor Dashboard (Seller Panel)**
+
+Create a dedicated dashboard for vendors with the following features:
+
+* Add new products (name, price, category, image, stock)
+* Edit and delete their own products
+* View list of their uploaded products
+* View orders related to their products
+* Update order status (pending, shipped, delivered)
+* View basic analytics:
+
+  * Total products
+  * Total orders
+  * Total revenue
+
+Rules:
+
+* Vendors can only manage their own products and orders.
+* Each product should be linked to a vendor in the database.
+
+---
+
+3. **Admin Dashboard (Full Control Panel)**
+
+Create a powerful admin dashboard with full system control:
+
+* View all users (customers and vendors)
+* Add / remove / block users
+* Promote a user to vendor role
+* View all products from all vendors
+* Approve or remove products
+* View all orders in the system
+* Manage order statuses globally
+* View system analytics:
+
+  * Total users
+  * Total vendors
+  * Total orders
+  * Total revenue
+
+---
+
+4. **Database Updates**
+   Extend the database schema to include:
+
+* User roles (customer/vendor/admin)
+* Vendor-product relationship
+* Order ownership (which vendor fulfilled the order)
+
+---
+
+5. **Frontend Integration**
+
+* Create new UI pages for:
+
+  * Vendor Dashboard
+  * Admin Dashboard
+* Maintain consistent design with the existing UI
+* Add navigation menus specific to each role
+* Ensure smooth page transitions
+
+---
+
+6. **Security & Validation**
+
+* Restrict access to dashboards based on roles
+* Prevent unauthorized users from accessing admin/vendor routes
+* Validate all inputs (product creation, updates, etc.)
+
+---
+
+7. **Project Structure**
+
+* Organize code into modules:
+
+  * authentication
+  * products
+  * orders
+  * recommendation system
+  * vendor dashboard
+  * admin dashboard
+
+---
+
+8. **Maintain Existing Features**
+
+* Do not break existing features:
+
+  * Login/signup
+  * Cart system
+  * Order flow
+  * AI recommendation system
+
+---
+
+Goal:
+Upgrade the current e-commerce system into a **multi-role platform with Customer, Vendor, and Admin dashboards**, where vendors manage their products and orders, and admins have full system control.

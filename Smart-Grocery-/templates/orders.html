@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}My Orders - Smart Grocery{% endblock %}
+{% block extra_styles %}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.animate-fade-in-up{animation:fadeInUp 0.5s ease-out forwards;opacity:0}
+.order-card:nth-child(1){animation-delay:0s}
+.order-card:nth-child(2){animation-delay:0.1s}
+.order-card:nth-child(3){animation-delay:0.2s}
+{% endblock %}
+{% block content %}
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-black tracking-tight">My Orders</h1>
+      <p class="text-slate-500 mt-1">{{ orders|length }} order{{ 's' if orders|length != 1 else '' }} placed</p>
+    </div>
+    <a href="/products" class="flex items-center gap-2 bg-primary text-black px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition shadow-md shadow-primary/20">
+      <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span> Shop Again
+    </a>
+  </div>
+
+  {% if orders %}
+  <div class="space-y-6">
+    {% for order in orders %}
+    {% set overall = order.overall_status %}
+    <div class="order-card animate-fade-in-up bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all overflow-hidden">
+
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row items-start justify-between gap-4 p-5 bg-slate-50/80 border-b border-slate-200">
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-lg font-bold text-slate-900">Order #{{ order.id }}</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold
+              {% if overall == 'delivered' %}bg-green-100 text-green-700
+              {% elif overall == 'in transit' %}bg-blue-100 text-blue-700
+              {% elif overall == 'confirmed' %}bg-yellow-100 text-yellow-700
+              {% else %}bg-slate-100 text-slate-600{% endif %}">
+              {{ overall|title }}
+            </span>
+            {% if order.vendor_orders|length > 1 %}
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">
+              {{ order.vendor_orders|length }} vendors
+            </span>
+            {% endif %}
+          </div>
+          <div class="flex items-center gap-4 text-sm text-slate-500 flex-wrap">
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">calendar_today</span>
+              {{ order.created_at[:10] }}
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">inventory_2</span>
+              {{ order.item_count }} item{{ 's' if order.item_count != 1 else '' }}
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">location_on</span>
+              <span class="truncate max-w-[200px]">{{ order.address }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="text-xs text-slate-500">Total Paid</p>
+          <p class="text-2xl font-black text-primary">${{ "%.2f"|format(order.total_amount) }}</p>
+        </div>
+      </div>
+
+      <!-- Vendor Sub-Orders -->
+      <div class="divide-y divide-slate-100">
+        {% for vo in order.vendor_orders %}
+        <div class="px-5 py-4">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-primary text-[14px]" style="font-variation-settings:'FILL' 1">storefront</span>
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-sm text-slate-800">{{ vo.vendor_name }}</p>
+              <p class="text-xs text-slate-400">{{ vo.line_items|length }} item(s) · ${{ "%.2f"|format(vo.subtotal) }}</p>
+            </div>
+            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full shrink-0
+              {% if vo.status == 'delivered' %}bg-green-100 text-green-700
+              {% elif vo.status == 'shipped' %}bg-blue-100 text-blue-700
+              {% elif vo.status == 'confirmed' %}bg-yellow-100 text-yellow-700
+              {% else %}bg-slate-100 text-slate-500{% endif %}">
+              {% if vo.status == 'shipped' %}In Transit
+              {% else %}{{ vo.status|title }}{% endif %}
+            </span>
+          </div>
+
+          <!-- Status Timeline (mini) -->
+          <div class="flex items-center gap-0 mb-3 ml-10">
+            {% set vsteps = ['pending', 'confirmed', 'shipped', 'delivered'] %}
+            {% set vstep_labels = ['Placed', 'Confirmed', 'Shipped', 'Delivered'] %}
+            {% set cur_idx = vsteps.index(vo.status) if vo.status in vsteps else 0 %}
+            {% for i in range(4) %}
+            <div class="flex items-center">
+              <div class="flex flex-col items-center">
+                <div class="w-5 h-5 rounded-full flex items-center justify-center shrink-0
+                  {% if i <= cur_idx %}bg-primary{% else %}bg-slate-200{% endif %}">
+                  {% if i < cur_idx %}
+                  <span class="material-symbols-outlined text-white text-[10px]">check</span>
+                  {% elif i == cur_idx %}
+                  <div class="w-2 h-2 rounded-full bg-white"></div>
+                  {% endif %}
+                </div>
+                <p class="text-[9px] text-slate-400 mt-0.5 whitespace-nowrap">{{ vstep_labels[i] }}</p>
+              </div>
+              {% if not loop.last %}
+              <div class="w-8 sm:w-12 h-0.5 mb-3 {% if i < cur_idx %}bg-primary{% else %}bg-slate-200{% endif %}"></div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Items -->
+          <div class="flex items-center gap-2 ml-10 flex-wrap">
+            {% for item in vo.line_items[:4] %}
+            <div class="w-10 h-10 rounded-lg overflow-hidden border border-slate-200 shrink-0 tooltip-parent relative group">
+              <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-full object-cover"/>
+              <div class="absolute bottom-full left-0 mb-1 bg-slate-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
+                {{ item.name }} × {{ item.quantity }}
+              </div>
+            </div>
+            {% endfor %}
+            {% if vo.line_items|length > 4 %}
+            <div class="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-500">+{{ vo.line_items|length - 4 }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Actions -->
+      <div class="px-5 py-4 bg-slate-50/50 border-t border-slate-100 flex flex-wrap gap-2">
+        <a href="/track/{{ order.id }}" class="flex items-center gap-1.5 bg-primary/10 text-primary px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-all">
+          <span class="material-symbols-outlined text-[18px]">location_on</span> Track Order
+        </a>
+        <a href="/products" class="flex items-center gap-1.5 bg-slate-100 text-slate-700 px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-200 transition-all">
+          <span class="material-symbols-outlined text-[18px]">refresh</span> Reorder
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-24 bg-white rounded-2xl border border-slate-200 border-dashed">
+    <span class="material-symbols-outlined text-8xl text-slate-200">receipt_long</span>
+    <h2 class="text-2xl font-bold text-slate-900 mt-6">No orders yet</h2>
+    <p class="text-slate-500 mt-2 max-w-sm mx-auto">Once you place an order, it will appear here for easy tracking and reordering.</p>
+    <a href="/products" class="mt-6 inline-block bg-primary text-black font-bold px-8 py-4 rounded-xl hover:opacity-90 transition">Start Shopping</a>
+  </div>
+  {% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vendor Login – Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{"primary":"#13ec13"},fontFamily:{sans:["Work Sans"]}}}}</script>
+<style>
+*{font-family:'Work Sans',sans-serif}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+@keyframes floatUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
+.float-up{animation:floatUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:0.4}100%{transform:scale(1.6);opacity:0}}
+.pulse-ring::after{content:'';position:absolute;inset:0;border-radius:inherit;border:2px solid #13ec13;animation:pulse-ring 2s infinite}
+.grid-bg{background-image:linear-gradient(rgba(19,236,19,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(19,236,19,0.03) 1px,transparent 1px);background-size:40px 40px}
+input:-webkit-autofill{-webkit-box-shadow:0 0 0 100px #0d1f0d inset!important;-webkit-text-fill-color:#fff!important}
+</style>
+</head>
+<body class="bg-[#080f08] min-h-screen flex">
+
+<!-- Left – Branding panel -->
+<div class="hidden lg:flex w-[45%] relative bg-[#0a150a] flex-col justify-between p-12 border-r border-white/10 overflow-hidden grid-bg">
+  <!-- Decorative blobs -->
+  <div class="absolute top-[-80px] left-[-80px] w-80 h-80 rounded-full bg-primary/10 blur-3xl"></div>
+  <div class="absolute bottom-[-60px] right-[-60px] w-64 h-64 rounded-full bg-primary/8 blur-3xl"></div>
+
+  <div class="relative">
+    <div class="flex items-center gap-3 mb-16">
+      <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/40">
+        <span class="material-symbols-outlined text-black font-bold" style="font-variation-settings:'FILL' 1">store</span>
+      </div>
+      <div>
+        <p class="font-black text-white text-lg uppercase tracking-tight">Smart<span class="text-primary">Grocery</span></p>
+        <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Vendor Portal</p>
+      </div>
+    </div>
+
+    <h1 class="text-5xl font-black text-white leading-tight mb-6">
+      Grow Your<br/><span class="text-primary">Business</span><br/>With Us.
+    </h1>
+    <p class="text-white/50 text-base leading-relaxed max-w-sm">
+      Manage your products, track orders in real-time, and access powerful analytics to drive your sales forward.
+    </p>
+  </div>
+
+  <div class="relative space-y-4">
+    <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+      <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">inventory_2</span>
+      </div>
+      <div>
+        <p class="font-bold text-sm text-white">Product Management</p>
+        <p class="text-xs text-white/40">Add, edit and manage your entire catalog</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+      <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-blue-400 text-[20px]" style="font-variation-settings:'FILL' 1">bar_chart</span>
+      </div>
+      <div>
+        <p class="font-bold text-sm text-white">Revenue Analytics</p>
+        <p class="text-xs text-white/40">Track sales, revenue and performance</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10">
+      <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-yellow-400 text-[20px]" style="font-variation-settings:'FILL' 1">receipt_long</span>
+      </div>
+      <div>
+        <p class="font-bold text-sm text-white">Order Control</p>
+        <p class="text-xs text-white/40">Update statuses and manage fulfillment</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Right – Login form -->
+<div class="flex-1 flex items-center justify-center p-8">
+  <div class="w-full max-w-md float-up">
+
+    <!-- Mobile logo -->
+    <div class="flex items-center gap-2 mb-10 lg:hidden">
+      <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+        <span class="material-symbols-outlined text-black text-base" style="font-variation-settings:'FILL' 1">store</span>
+      </div>
+      <p class="font-black text-white uppercase">Smart<span class="text-primary">Grocery</span></p>
+    </div>
+
+    <div class="mb-8">
+      <div class="relative inline-flex w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 items-center justify-center mb-4 pulse-ring">
+        <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings:'FILL' 1">store</span>
+      </div>
+      <h2 class="text-3xl font-black text-white">Vendor Sign In</h2>
+      <p class="text-white/40 mt-1 text-sm">Access your seller dashboard and analytics</p>
+    </div>
+
+    {% if error %}
+    <div class="mb-5 flex items-center gap-3 bg-red-500/10 border border-red-500/30 rounded-2xl px-4 py-3 text-red-400 text-sm">
+      <span class="material-symbols-outlined text-[18px] shrink-0">error</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+    
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('msg') === 'password_reset_success') {
+          document.write('<div class="mb-5 flex items-center gap-3 bg-green-500/10 border border-green-500/30 rounded-2xl px-4 py-3 text-green-400 text-sm"><span class="material-symbols-outlined text-[18px] shrink-0">check_circle</span><span>Password successfully changed. You can now log in.</span></div>');
+      }
+    </script>
+
+    <form method="POST" action="/vendor/login" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-white/40 mb-2">Email Address</label>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-white/30 text-[20px]">mail</span>
+          <input type="email" name="email" required autocomplete="email"
+            class="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3.5 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm placeholder:text-white/20 transition-all hover:border-white/20"
+            placeholder="vendor@example.com"/>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-white/40 mb-2">Password</label>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-white/30 text-[20px]">lock</span>
+          <input type="password" name="password" id="pwd" required autocomplete="current-password"
+            class="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-12 py-3.5 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm placeholder:text-white/20 transition-all hover:border-white/20"
+            placeholder="••••••••"/>
+          <button type="button" onclick="togglePwd()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-[20px]" id="eye-icon">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-primary text-black font-black py-4 rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all text-sm tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-primary/30 mt-6">
+        <span class="material-symbols-outlined text-[20px]">login</span>
+        Sign In to Dashboard
+      </button>
+    </form>
+
+    <div class="mt-6 pt-6 border-t border-white/10">
+      <p class="text-center text-sm text-white/30">
+        Not a vendor?
+        <a href="/login" class="text-primary font-semibold hover:underline ml-1">Customer Login →</a>
+      </p>
+      <p class="text-center text-sm text-white/20 mt-2">
+        Forgot password? <a href="/forgot-password" class="text-white/40 hover:text-white transition-colors underline">Reset it here</a>
+      </p>
+    </div>
+
+    <!-- Quick Access Cards -->
+    <div class="mt-6">
+      <p class="text-[11px] font-bold uppercase tracking-widest text-white/25 text-center mb-3">Quick Access — Click to Sign In</p>
+      <div class="grid grid-cols-2 gap-3">
+
+        <!-- Vendor Card -->
+        <button type="button" onclick="quickLogin('vendor@smartgrocery.com','vendor123')"
+          class="group relative overflow-hidden text-left p-4 rounded-2xl border border-white/10 bg-white/3 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 active:scale-95">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative">
+            <div class="w-9 h-9 rounded-xl bg-primary/15 border border-primary/20 flex items-center justify-center mb-3 group-hover:bg-primary/25 transition-colors">
+              <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">storefront</span>
+            </div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-0.5">Vendor</p>
+            <p class="text-sm font-black text-white group-hover:text-primary transition-colors">Demo Store</p>
+            <div class="mt-2 flex items-center gap-1 text-[10px] text-white/20 group-hover:text-primary/60 transition-colors">
+              <span class="material-symbols-outlined text-[12px]">login</span>
+              <span>Click to enter</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Admin Card -->
+        <button type="button" onclick="quickLogin('admin@smartgrocery.com','admin123')"
+          class="group relative overflow-hidden text-left p-4 rounded-2xl border border-white/10 bg-white/3 hover:border-blue-400/40 hover:bg-blue-500/5 transition-all duration-300 active:scale-95">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/15 border border-blue-500/20 flex items-center justify-center mb-3 group-hover:bg-blue-500/25 transition-colors">
+              <span class="material-symbols-outlined text-blue-400 text-[18px]" style="font-variation-settings:'FILL' 1">admin_panel_settings</span>
+            </div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-0.5">Admin</p>
+            <p class="text-sm font-black text-white group-hover:text-blue-400 transition-colors">Super Admin</p>
+            <div class="mt-2 flex items-center gap-1 text-[10px] text-white/20 group-hover:text-blue-400/60 transition-colors">
+              <span class="material-symbols-outlined text-[12px]">login</span>
+              <span>Click to enter</span>
+            </div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePwd() {
+  const pwd = document.getElementById('pwd');
+  const icon = document.getElementById('eye-icon');
+  if (pwd.type === 'password') {
+    pwd.type = 'text';
+    icon.textContent = 'visibility_off';
+  } else {
+    pwd.type = 'password';
+    icon.textContent = 'visibility';
+  }
+}
+
+function quickLogin(email, password) {
+  const form = document.querySelector('form[action="/vendor/login"]');
+  form.querySelector('input[name="email"]').value = email;
+  form.querySelector('input[name="password"]').value = password;
+  // Brief visual flash before submit
+  setTimeout(() => form.submit(), 150);
+}
+</script>
+</body>
+</html>

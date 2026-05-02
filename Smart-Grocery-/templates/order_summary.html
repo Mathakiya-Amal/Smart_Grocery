@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Checkout - Smart Grocery{% endblock %}
+{% block extra_styles %}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.animate-fade-in-up{animation:fadeInUp 0.6s ease-out forwards;opacity:0}
+.field-label{@apply block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5}
+{% endblock %}
+{% block content %}
+<main class="flex-1 flex flex-col items-center py-8 px-4">
+  <div class="max-w-[860px] w-full flex flex-col gap-6 animate-fade-in-up">
+
+    <!-- Progress -->
+    <div class="flex flex-col gap-2 px-2">
+      <div class="flex justify-between items-center">
+        <p class="font-semibold text-sm">Checkout Progress</p>
+        <p class="text-xs text-slate-500">Step 2 of 2 — Review & Place Order</p>
+      </div>
+      <div class="rounded-full bg-slate-200 h-2 overflow-hidden">
+        <div class="h-full rounded-full bg-primary" style="width:100%"></div>
+      </div>
+    </div>
+
+    {% if errors %}
+    <div class="bg-red-50 border border-red-200 rounded-xl p-4 space-y-1">
+      {% for e in errors %}
+      <p class="text-red-700 text-sm flex items-center gap-2">
+        <span class="material-symbols-outlined text-[16px]">error</span> {{ e }}
+      </p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if multi_vendor %}
+    <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+      <span class="material-symbols-outlined text-blue-500 text-2xl shrink-0" style="font-variation-settings:'FILL' 1">info</span>
+      <div>
+        <p class="font-bold text-blue-900 text-sm">Multi-Vendor Order</p>
+        <p class="text-blue-700 text-xs mt-1">Your order has items from <strong>{{ vendor_groups|length }} vendors</strong> and will be delivered separately by each vendor. Each vendor will confirm and ship their items independently.</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/place-order" class="flex flex-col gap-6" id="checkout-form">
+
+      <!-- Delivery Details -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-14 w-full bg-gradient-to-r from-primary/20 to-primary/5 flex items-center px-6 gap-3">
+          <span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings:'FILL' 1">local_shipping</span>
+          <h2 class="font-bold text-slate-800">Delivery Details</h2>
+          <span class="ml-auto text-xs text-primary font-bold bg-primary/10 px-2 py-0.5 rounded-full">Required</span>
+        </div>
+        <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5" for="address">Full Delivery Address *</label>
+            <textarea id="address" name="address" rows="2" required
+              placeholder="House/Flat no., Street, Area, City, State"
+              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-none">{{ form_address or user.address or '' }}</textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5" for="pincode">PIN Code *</label>
+            <input id="pincode" name="pincode" type="text" inputmode="numeric" pattern="\d{4,10}" required
+              placeholder="e.g. 560001"
+              value="{{ form_pincode or '' }}"
+              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"/>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5" for="mobile">Mobile Number *</label>
+            <input id="mobile" name="mobile" type="tel" required
+              placeholder="e.g. +1 555 000 1234"
+              value="{{ form_mobile or user.phone or '' }}"
+              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items by Vendor -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-14 w-full bg-gradient-to-r from-primary/20 to-primary/5 flex items-center px-6 gap-3">
+          <span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings:'FILL' 1">inventory_2</span>
+          <h2 class="font-bold text-slate-800">Order Items</h2>
+          <span class="ml-auto text-xs text-slate-500">{{ items|length }} item(s)</span>
+        </div>
+        <div class="divide-y divide-slate-100">
+          {% for vendor_name, vitems in vendor_groups.items() %}
+          {% if multi_vendor %}
+          <div class="px-6 py-3 bg-slate-50 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings:'FILL' 1">storefront</span>
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-wide">{{ vendor_name }}</span>
+            <span class="ml-auto text-xs text-slate-400">Fulfilled & shipped by {{ vendor_name }}</span>
+          </div>
+          {% endif %}
+          {% for item in vitems %}
+          <div class="flex items-center gap-4 px-6 py-4">
+            <div class="size-14 rounded-lg bg-center bg-cover border border-slate-200 shrink-0" style="background-image:url('{{ item.image_url }}')"></div>
+            <div class="flex-1">
+              <p class="font-semibold text-slate-900">{{ item.name }}</p>
+              <p class="text-slate-500 text-xs">Qty: {{ item.quantity }}</p>
+            </div>
+            <p class="font-bold text-slate-900">${{ "%.2f"|format(item.price * item.quantity) }}</p>
+          </div>
+          {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Price Summary + CTA -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-6 md:p-8">
+          <div class="bg-slate-50 rounded-xl border border-dashed border-slate-300 p-5 mb-6">
+            <div class="flex flex-col gap-3">
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Subtotal</span><span class="font-medium">${{ "%.2f"|format(subtotal) }}</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Delivery Fee</span><span class="font-medium">{% if delivery == 0 %}<span class="text-primary font-bold">FREE</span>{% else %}${{ "%.2f"|format(delivery) }}{% endif %}</span></div>
+              <div class="flex justify-between text-sm"><span class="text-slate-500">Estimated Tax (8%)</span><span class="font-medium">${{ "%.2f"|format(tax) }}</span></div>
+              <hr class="border-slate-200 my-1"/>
+              <div class="flex justify-between items-center">
+                <span class="text-xl font-bold">Total Amount</span>
+                <span class="text-primary text-2xl font-black">${{ "%.2f"|format(total) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <button type="submit" class="w-full bg-primary hover:brightness-105 text-black font-bold py-4 rounded-xl transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">lock</span>
+              <span>Confirm & Place Order</span>
+            </button>
+            <a href="/cart" class="w-full text-center text-primary font-semibold py-3 rounded-xl hover:bg-primary/5 transition-all flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Cart
+            </a>
+          </div>
+
+          <p class="text-center text-xs text-slate-400 mt-4 flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">verified_user</span> Secure checkout. Your data is protected.
+          </p>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</main>
+{% endblock %}

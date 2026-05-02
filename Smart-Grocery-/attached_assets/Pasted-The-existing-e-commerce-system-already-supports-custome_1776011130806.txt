@@ -1,0 +1,143 @@
+The existing e-commerce system already supports customers, vendors, admin dashboards, cart, orders, and AI recommendations. I want to **enhance the order flow** to support **address collection per order, multi-vendor order splitting, vendor-wise confirmations, and detailed delivery status tracking**.
+
+Please implement the following updates:
+
+---
+
+1. **Checkout with Required Customer Details**
+
+* During checkout, before placing an order, require the user to enter:
+
+  * Full delivery address
+  * PIN code
+  * Mobile number
+* Validate inputs (non-empty, valid PIN format, valid phone number).
+* Save these details with the order.
+* Do not allow order confirmation without these fields.
+
+---
+
+2. **Multi-Vendor Order Splitting**
+
+* If the cart contains products from multiple vendors:
+
+  * Automatically split the cart into **separate sub-orders per vendor**.
+  * Each sub-order should belong to a specific vendor.
+* Maintain a **parent order (group)** and **child orders (vendor-wise)**.
+
+Data model suggestion:
+
+* OrderGroup (id, user_id, total_amount, address, pincode, mobile, created_at)
+* VendorOrder (id, order_group_id, vendor_id, status, subtotal)
+* OrderItem (id, vendor_order_id, product_id, quantity, price)
+
+---
+
+3. **Vendor Confirmation Workflow**
+
+* Each vendor should see only their **VendorOrder(s)** in the Vendor Dashboard.
+* Vendors can:
+
+  * Accept/confirm order
+  * Mark as shipped
+  * Mark as delivered
+* Status flow per vendor order:
+
+  * pending → confirmed → shipped → delivered
+* One vendor’s actions must not affect other vendors’ orders.
+
+---
+
+4. **Customer Order Tracking (Granular Status)**
+
+* In the customer “My Orders” page:
+
+  * Show the **OrderGroup** with a breakdown by vendor.
+  * For each vendor sub-order, display:
+
+    * Vendor name
+    * Products under that vendor
+    * Status (pending / confirmed / shipped / delivered)
+* Clearly indicate:
+
+  * Items **confirmed**
+  * Items **in delivery (shipped)**
+  * Items **delivered**
+  * Items **pending/unconfirmed**
+
+---
+
+5. **Vendor Visibility at Checkout**
+
+* On the checkout page and cart page:
+
+  * Group items by vendor.
+  * Display vendor name above each group of items.
+  * Show a message like:
+    “Your order contains items from multiple vendors. These will be delivered separately.”
+
+---
+
+6. **Partial Delivery Handling**
+
+* Allow partial fulfillment:
+
+  * If Vendor A confirms and ships, but Vendor B has not confirmed:
+
+    * Show Vendor A items as “in delivery/delivered”
+    * Show Vendor B items as “pending”
+* Customer should clearly see mixed statuses within the same overall order.
+
+---
+
+7. **Notifications (Basic)**
+
+* Update UI messages when:
+
+  * Vendor confirms an order
+  * Order is shipped
+  * Order is delivered
+* Show status updates on refresh (real-time optional).
+
+---
+
+8. **Admin Visibility**
+
+* Admin dashboard should show:
+
+  * All OrderGroups
+  * All VendorOrders
+  * Status per vendor
+* Admin can view but not interfere with vendor-specific fulfillment unless required.
+
+---
+
+9. **Frontend Integration**
+
+* Update:
+
+  * Cart page (group by vendor)
+  * Checkout page (collect address details)
+  * Order summary page (show vendor-wise split)
+  * My Orders page (detailed tracking UI)
+* Maintain consistent UI design.
+
+---
+
+10. **Security & Validation**
+
+* Ensure:
+
+  * Only logged-in users can place orders
+  * Vendors only see their own orders
+  * Input validation for address, PIN, and mobile
+
+---
+
+Goal:
+Enhance the system to support **real-world multi-vendor order processing**, where:
+
+* Users must enter delivery details before ordering,
+* Orders are split vendor-wise,
+* Each vendor handles and delivers their own products,
+* Customers can track each product’s delivery status clearly.

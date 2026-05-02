@@ -1,0 +1,89 @@
+I already have a complete **frontend UI for a Smart Grocery E-Commerce Website** created using HTML, CSS, and JavaScript. The UI includes pages such as Login, Signup, Home, Product Listing, Cart, and Order Summary. I want to convert this static UI into a **fully functional web application**.
+
+Your task is to **build and connect the backend to the existing UI**. You may choose any suitable backend language, framework, and database that works well in Replit. The goal is to make all buttons, pages, and user actions fully functional.
+
+Main requirements:
+
+1. **Connect the existing frontend UI with backend logic**
+
+   * Ensure all pages load properly.
+   * Navigation between pages should work smoothly.
+   * All buttons and forms should perform real actions.
+
+2. **Authentication system**
+
+   * Implement signup and login functionality.
+   * Store user accounts in a database.
+   * Maintain user sessions after login.
+
+3. **Product management**
+
+   * Create a database structure for products.
+   * Load product data dynamically on the product listing page.
+
+4. **Cart functionality**
+
+   * Add to Cart
+   * Remove from Cart
+   * Increase and decrease product quantity
+   * Update total items and total price dynamically
+
+5. **Order summary**
+
+   * Show the selected products
+   * Display total cost
+   * Simulate order placement (no payment required)
+
+6. **Database design**
+
+   * Create tables/collections for:
+
+     * Users
+     * Products
+     * Cart
+     * Orders
+     * User purchase history
+
+7. **AI-based Recommendation System (Important Feature)**
+   Implement a recommendation system that analyzes the user's past orders and suggests products they are likely to buy again.
+
+   The recommendation system should:
+
+   * Track each user's purchase history.
+   * Predict what products the user may need next.
+   * Display recommended products on the home page and product page.
+   * Update recommendations whenever a user logs in.
+
+   Example behavior:
+
+   * If a user frequently buys milk, bread, and eggs, the system should prioritize these products in recommendations.
+   * If a returning customer logs in, the homepage should dynamically show personalized product suggestions.
+
+   You may use any suitable AI or machine learning method such as:
+
+   * collaborative filtering
+   * content-based recommendation
+   * simple machine learning model
+   * lightweight AI library
+
+   The recommendation logic should run automatically based on the user's previous order data.
+
+8. **Frontend personalization**
+
+   * When a user logs in, the homepage should update and show personalized recommendations.
+   * Recommended items should appear in a dedicated section like:
+     "Recommended for You".
+
+9. **Project structure**
+   Organize the project with a clean structure separating:
+
+   * frontend files
+   * backend logic
+   * database models
+   * recommendation engine
+
+10. **Deployment**
+    Ensure the project runs correctly in Replit and provide instructions to start the application.
+
+Goal:
+Turn the existing static grocery UI into a **fully working intelligent e-commerce website with personalized AI recommendations based on customer purchase behavior**.

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Order Placed! - Smart Grocery{% endblock %}
+{% block extra_styles %}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.animate-pop{animation:pop 0.5s cubic-bezier(.36,.07,.19,.97) forwards}
+.animate-float{animation:float 4s ease-in-out infinite}
+.animate-fade{animation:fadeInUp 0.5s ease-out forwards}
+{% endblock %}
+{% block content %}
+<main class="flex-1 flex flex-col items-center justify-center py-10 px-4">
+  <div class="max-w-2xl w-full flex flex-col items-center gap-6">
+
+    <!-- Checkmark -->
+    <div class="relative size-28 animate-pop">
+      <div class="absolute inset-0 rounded-full border-4 border-primary/40 flex items-center justify-center">
+        <div class="size-22 rounded-full bg-primary/10 flex items-center justify-center w-full h-full">
+          <svg viewBox="0 0 100 100" class="size-16 text-primary">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#13ec13" stroke-width="6" opacity="0.3"/>
+            <path d="M25 50 L42 67 L75 33" fill="none" stroke="#13ec13" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center animate-fade">
+      <p class="text-xs text-slate-400 uppercase tracking-widest font-medium">Order Group #{{ group.id }}</p>
+      <h1 class="text-3xl font-black mt-2 text-slate-900">Order Placed Successfully!</h1>
+      <p class="text-slate-500 mt-2 text-sm">Your order has been split and sent to {{ vendor_orders|length }} vendor{{ 's' if vendor_orders|length > 1 else '' }}. Each will confirm and ship their items.</p>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-lg p-6 w-full animate-float">
+      <div class="flex justify-between items-start mb-5">
+        <div>
+          <p class="text-sm text-slate-500">Order Total</p>
+          <p class="text-3xl font-black text-primary">${{ "%.2f"|format(group.total_amount) }}</p>
+        </div>
+        <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1.5 rounded-full">Awaiting Vendor</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 mb-5">
+        <div class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl text-sm">
+          <span class="material-symbols-outlined text-slate-400 text-[18px]">calendar_today</span>
+          <div>
+            <p class="text-xs text-slate-400">Date</p>
+            <p class="font-semibold text-slate-800">{{ group.created_at[:10] }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl text-sm">
+          <span class="material-symbols-outlined text-slate-400 text-[18px]">storefront</span>
+          <div>
+            <p class="text-xs text-slate-400">Vendors</p>
+            <p class="font-semibold text-slate-800">{{ vendor_orders|length }} vendor{{ 's' if vendor_orders|length > 1 else '' }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl text-sm col-span-2">
+          <span class="material-symbols-outlined text-slate-400 text-[18px]">location_on</span>
+          <div class="min-w-0">
+            <p class="text-xs text-slate-400">Delivering to</p>
+            <p class="font-semibold text-slate-800 truncate">{{ group.address }}, {{ group.pincode }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Per-vendor status -->
+      <div class="border-t border-slate-100 pt-4 space-y-3">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Vendor Breakdown</p>
+        {% for vo in vendor_orders %}
+        <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+          <div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+            <span class="text-xs font-black text-primary">{{ loop.index }}</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-sm text-slate-900">{{ vo.vendor_name }}</p>
+            <p class="text-xs text-slate-500">{{ vo.line_items|length }} item(s) · ${{ "%.2f"|format(vo.subtotal) }}</p>
+            <div class="flex flex-wrap gap-1 mt-1">
+              {% for it in vo.line_items[:3] %}
+              <span class="text-[10px] bg-white border border-slate-200 px-1.5 py-0.5 rounded text-slate-600">{{ it.name }}</span>
+              {% endfor %}
+              {% if vo.line_items|length > 3 %}<span class="text-[10px] text-slate-400">+{{ vo.line_items|length - 3 }} more</span>{% endif %}
+            </div>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 shrink-0">pending</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Thumbnails -->
+      {% if items %}
+      <div class="flex gap-2 mt-4 flex-wrap">
+        {% for item in items[:5] %}
+        <div class="size-11 rounded-lg overflow-hidden border border-slate-200 shrink-0">
+          <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-full object-cover"/>
+        </div>
+        {% endfor %}
+        {% if items|length > 5 %}
+        <div class="size-11 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-500">+{{ items|length - 5 }}</div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- CTAs -->
+    <div class="flex flex-col sm:flex-row gap-3 w-full">
+      <a href="/track/{{ group.id }}" class="flex-1 bg-primary text-black font-bold py-3.5 rounded-xl text-center hover:opacity-90 transition flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">location_on</span> Track Order
+      </a>
+      <a href="/orders" class="flex-1 bg-white border border-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-center hover:bg-slate-50 transition flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">receipt_long</span> My Orders
+      </a>
+      <a href="/products" class="flex-1 text-primary font-bold py-3.5 rounded-xl text-center hover:bg-primary/10 transition flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined">add_shopping_cart</span> Shop Again
+      </a>
+    </div>
+  </div>
+</main>
+{% endblock %}

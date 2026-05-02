@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Profile Settings - Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Work Sans", sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-item-active {
+            background-color: rgba(19, 236, 19, 0.1);
+            border-left: 4px solid #13ec13;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1b0d] dark:text-[#f8fcf8]">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-64 border-r border-[#e7f3e7] dark:border-[#2a3a2a] bg-white dark:bg-[#152a15] hidden lg:flex flex-col sticky top-0 h-screen">
+<div class="p-6 flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h1 class="text-xl font-bold tracking-tight">Smart Grocery</h1>
+</div>
+<div class="px-4 mt-6">
+<div class="flex items-center gap-3 p-3 bg-background-light dark:bg-background-dark/30 rounded-lg">
+<div class="size-10 rounded-full bg-cover bg-center" data-alt="User profile avatar portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuATbQFUNKYNY2Fd0qfMac8Z6wWafhDgLusjXXJRxprL4i4TkS_DvDx5ihtf_48mQpA0ODJApeKMJI5ll-ePZoWB8-SXOVjotKaOUT0MaCO7aPuTAeUbG_fnvkBTroDfZMcf4iAyqwsBI1TEggcIiD4ptmKixUMM6xwTyODdiXDDgdeI6nAIObcj8P7p-hU8qAaG21TTMB9XJzfmtZfahT5b25GhUZ0yOFVUmmfmiZkJtn5N0eSoUBZwgZIg_kxJ9U_yqWyR6bDbjg')"></div>
+<div class="overflow-hidden">
+<p class="text-sm font-semibold truncate">Alex Johnson</p>
+<p class="text-xs text-[#4c9a4c] dark:text-primary/70 truncate">Academic Account</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 mt-8 space-y-1 px-2">
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-background-light dark:hover:bg-background-dark/30 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-background-light dark:hover:bg-background-dark/30 transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+                    My Orders
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg sidebar-item-active text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">manage_accounts</span>
+                    Profile Settings
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-background-light dark:hover:bg-background-dark/30 transition-colors" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+                    Billing
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-background-light dark:hover:bg-background-dark/30 transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+                    Help Center
+                </a>
+</nav>
+<div class="p-4 border-t border-[#e7f3e7] dark:border-[#2a3a2a]">
+<button class="flex items-center gap-3 px-4 py-3 w-full text-sm font-medium text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+                    Sign Out
+                </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto">
+<!-- Header -->
+<header class="h-16 border-b border-[#e7f3e7] dark:border-[#2a3a2a] bg-white dark:bg-[#152a15] flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-sm text-[#4c9a4c] dark:text-primary/70">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Account</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-[#0d1b0d] dark:text-white font-medium">Profile Settings</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<label class="relative hidden md:block">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-[#4c9a4c]">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="bg-background-light dark:bg-background-dark/50 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-1 focus:ring-primary w-64" placeholder="Search orders..." type="text"/>
+</label>
+<button class="p-2 rounded-lg bg-background-light dark:bg-background-dark/50 hover:bg-primary/10 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<button class="p-2 rounded-lg bg-background-light dark:bg-background-dark/50 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 max-w-5xl mx-auto">
+<div class="mb-8">
+<h2 class="text-3xl font-black tracking-tight text-[#0d1b0d] dark:text-white">Profile Settings</h2>
+<p class="text-[#4c9a4c] dark:text-primary/70 mt-1">Manage your account information and preferences for a personalized grocery experience.</p>
+</div>
+<div class="grid gap-8">
+<!-- Personal Information Section -->
+<section class="bg-white dark:bg-[#152a15] rounded-xl shadow-sm border border-[#e7f3e7] dark:border-[#2a3a2a] overflow-hidden">
+<div class="p-6 border-b border-[#e7f3e7] dark:border-[#2a3a2a] flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">person</span>
+<h3 class="text-lg font-bold">Personal Information</h3>
+</div>
+<button class="text-primary text-sm font-semibold hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">edit</span> Edit Profile
+                            </button>
+</div>
+<div class="p-6">
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="flex flex-col items-center gap-3">
+<div class="relative group">
+<div class="size-32 rounded-full border-4 border-background-light dark:border-background-dark/50 shadow-md bg-cover bg-center" data-alt="User profile avatar closeup" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBLXUf5gwEzUBjJ-qIEpfGnMHwA7715AeV1zQ6Z3gtTTD6f2l-ps7ISi0EhuV_FBv1TBO9diLohZq4cLPchQEOK-AtDs86Re0Zohjb47Bt12JJlGurnvzZfH0LRoHCygC3CEsBRdMvgI8T5vgxOKTGV-27OWokU9Ywgkxj1_Tr2TUE4syZC7S2YSYiVye5V7z7FYfxf-dbTTEb2Uu5lD5LGtMvX716URUTbNyPZLCeNz8gm_ALckN9NfPqtEs10CGTeuBpX3-858Q')"></div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+</button>
+</div>
+<p class="text-xs text-[#4c9a4c] text-center">JPG, GIF or PNG. <br/> Max size of 800K</p>
+</div>
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+<div class="space-y-1">
+<p class="text-xs font-bold uppercase tracking-wider text-[#4c9a4c] dark:text-primary/50">Full Name</p>
+<p class="text-base font-medium">Alex Johnson</p>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold uppercase tracking-wider text-[#4c9a4c] dark:text-primary/50">Email Address</p>
+<div class="flex items-center gap-2">
+<p class="text-base font-medium">alex.johnson@university.edu</p>
+<span class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded-full border border-primary/20">VERIFIED</span>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold uppercase tracking-wider text-[#4c9a4c] dark:text-primary/50">Phone Number</p>
+<p class="text-base font-medium">+1 (555) 987-6543</p>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold uppercase tracking-wider text-[#4c9a4c] dark:text-primary/50">Student/Employee ID</p>
+<p class="text-base font-medium">U-8829410</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Address Book Section -->
+<section class="bg-white dark:bg-[#152a15] rounded-xl shadow-sm border border-[#e7f3e7] dark:border-[#2a3a2a] overflow-hidden">
+<div class="p-6 border-b border-[#e7f3e7] dark:border-[#2a3a2a] flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="text-lg font-bold">Address Book</h3>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-[#0d1b0d] text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span> Add New Address
+                            </button>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Address Card 1 -->
+<div class="border border-primary/20 bg-primary/5 p-4 rounded-xl relative group">
+<div class="absolute top-4 right-4 flex gap-2">
+<button class="text-[#4c9a4c] hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="text-red-400 hover:text-red-600 transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-0.5 bg-primary text-[#0d1b0d] text-[10px] font-bold rounded">DEFAULT</span>
+<p class="font-bold text-sm">Home</p>
+</div>
+<p class="text-sm text-[#0d1b0d] dark:text-white/80 leading-relaxed">
+                                        123 Academic Way, Apt 4B<br/>
+                                        University Heights, CA 90210
+                                    </p>
+</div>
+<!-- Address Card 2 -->
+<div class="border border-[#e7f3e7] dark:border-[#2a3a2a] p-4 rounded-xl relative group hover:border-primary/20 transition-colors">
+<div class="absolute top-4 right-4 flex gap-2">
+<button class="text-[#4c9a4c] hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="text-red-400 hover:text-red-600 transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<p class="font-bold text-sm">Main Office</p>
+</div>
+<p class="text-sm text-[#0d1b0d] dark:text-white/80 leading-relaxed">
+                                        Science Building, Room 502<br/>
+                                        456 Research Lane, San Francisco, CA 94105
+                                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Settings Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Password & Security -->
+<section class="bg-white dark:bg-[#152a15] rounded-xl shadow-sm border border-[#e7f3e7] dark:border-[#2a3a2a] overflow-hidden">
+<div class="p-6 border-b border-[#e7f3e7] dark:border-[#2a3a2a]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">security</span>
+<h3 class="text-lg font-bold">Security</h3>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div class="space-y-2">
+<label class="text-sm font-semibold">Current Password</label>
+<input class="w-full bg-background-light dark:bg-background-dark/50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-primary" type="password" value="••••••••••••"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold">New Password</label>
+<input class="w-full bg-background-light dark:bg-background-dark/50 border-none rounded-lg p-3 text-sm focus:ring-1 focus:ring-primary" placeholder="Min. 8 characters" type="password"/>
+</div>
+<button class="w-full py-2.5 bg-background-light dark:bg-background-dark/50 text-[#0d1b0d] dark:text-white font-bold text-sm rounded-lg hover:bg-primary hover:text-[#0d1b0d] transition-all border border-[#e7f3e7] dark:border-[#2a3a2a]">
+                                    Update Password
+                                </button>
+<div class="pt-2 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#4c9a4c]">devices</span>
+<p class="text-xs font-medium">Two-Factor Authentication</p>
+</div>
+<div class="relative inline-block w-10 h-5">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="w-10 h-5 bg-gray-300 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+<div class="absolute top-1 left-1 bg-white size-3 rounded-full peer-checked:translate-x-5 transition-transform"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Notification Preferences -->
+<section class="bg-white dark:bg-[#152a15] rounded-xl shadow-sm border border-[#e7f3e7] dark:border-[#2a3a2a] overflow-hidden">
+<div class="p-6 border-b border-[#e7f3e7] dark:border-[#2a3a2a]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+<h3 class="text-lg font-bold">Notifications</h3>
+</div>
+</div>
+<div class="p-6 space-y-5">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-semibold">Order Status Updates</p>
+<p class="text-xs text-[#4c9a4c]">Receive SMS when order is out for delivery</p>
+</div>
+<div class="relative inline-block w-10 h-5">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="w-10 h-5 bg-gray-300 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+<div class="absolute top-1 left-1 bg-white size-3 rounded-full peer-checked:translate-x-5 transition-transform"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-semibold">Promotional Offers</p>
+<p class="text-xs text-[#4c9a4c]">Emails about weekly discounts and coupons</p>
+</div>
+<div class="relative inline-block w-10 h-5">
+<input class="peer sr-only" type="checkbox"/>
+<div class="w-10 h-5 bg-gray-300 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+<div class="absolute top-1 left-1 bg-white size-3 rounded-full peer-checked:translate-x-5 transition-transform"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-semibold">Stock Alerts</p>
+<p class="text-xs text-[#4c9a4c]">Notifications when items in your list are back</p>
+</div>
+<div class="relative inline-block w-10 h-5">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="w-10 h-5 bg-gray-300 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors"></div>
+<div class="absolute top-1 left-1 bg-white size-3 rounded-full peer-checked:translate-x-5 transition-transform"></div>
+</div>
+</div>
+<div class="pt-2">
+<button class="text-primary text-xs font-bold hover:underline">Manage all notification methods</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Delete Account Action -->
+<div class="p-6 border border-red-200 dark:border-red-900/30 bg-red-50 dark:bg-red-900/10 rounded-xl flex flex-col md:flex-row justify-between items-center gap-4">
+<div>
+<h4 class="text-red-700 dark:text-red-400 font-bold">Danger Zone</h4>
+<p class="text-xs text-red-600 dark:text-red-400/70">Once you delete your account, all data and order history will be permanently removed.</p>
+</div>
+<button class="px-6 py-2 bg-red-600 text-white font-bold text-sm rounded-lg hover:bg-red-700 transition-colors">
+                            Delete Account
+                        </button>
+</div>
+</div>
+<!-- Footer spacer -->
+<div class="h-16"></div>
+</div>
+</main>
+</div>
+</body></html>

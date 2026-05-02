@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}My Wishlist - Smart Grocery{% endblock %}
+{% block extra_styles %}
+@keyframes heartPop {0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.heart-pop{animation:heartPop 0.3s ease-out}
+.product-card-hover:hover{transform:translateY(-6px);box-shadow:0 20px 25px -5px rgba(19,236,19,0.1)}
+{% endblock %}
+{% block content %}
+<main class="max-w-7xl mx-auto px-6 py-10">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-10 h-10 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center">
+          <span class="material-symbols-outlined text-red-500 text-xl" style="font-variation-settings:'FILL' 1">favorite</span>
+        </div>
+        <h1 class="text-3xl font-black tracking-tight text-slate-900">My Wishlist</h1>
+      </div>
+      <p class="text-slate-500 text-sm ml-13">
+        {% if products %}{{ products|length }} saved item{{ 's' if products|length != 1 }}{% else %}No saved items yet{% endif %}
+      </p>
+    </div>
+    <a href="/products" class="flex items-center gap-2 bg-primary text-black font-bold px-5 py-2.5 rounded-xl text-sm hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+      <span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+      Browse Products
+    </a>
+  </div>
+
+  {% if products %}
+  <!-- Product Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+    {% for product in products %}
+    <div class="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 flex flex-col product-card-hover relative" id="wish-card-{{ product.id }}">
+
+      <!-- Wishlist Remove Button -->
+      <button onclick="removeFromWishlist({{ product.id }})"
+        class="absolute top-3 right-3 z-10 w-9 h-9 rounded-xl bg-white/90 backdrop-blur-sm border border-red-100 flex items-center justify-center shadow-sm hover:bg-red-50 hover:border-red-300 transition-all group/heart"
+        title="Remove from wishlist">
+        <span class="material-symbols-outlined text-red-500 text-[20px] group-hover/heart:scale-110 transition-transform" style="font-variation-settings:'FILL' 1">favorite</span>
+      </button>
+
+      <div class="relative aspect-square bg-slate-50 overflow-hidden">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+             src="{{ product.image_url }}" alt="{{ product.name }}"/>
+        {% if product.badge %}
+        <div class="absolute top-3 left-3">
+          <span class="{% if product.badge == 'Sale' %}bg-red-500{% elif product.badge == 'New' %}bg-blue-500{% else %}bg-primary{% endif %} text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm uppercase tracking-wider">{{ product.badge }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="p-5 flex flex-col flex-1">
+        <p class="text-[10px] uppercase font-bold tracking-widest text-slate-400 mb-1">{{ product.brand }}</p>
+        <h3 class="font-bold text-slate-800 mb-1 line-clamp-2 leading-snug">{{ product.name }}</h3>
+        <p class="text-xs text-slate-500 mb-5">{{ product.unit }}</p>
+        <div class="mt-auto flex items-center justify-between pt-2">
+          <div>
+            <span class="text-xl font-black text-slate-900">${{ "%.2f"|format(product.price) }}</span>
+            {% if product.original_price %}<span class="text-xs text-slate-400 line-through ml-1.5">${{ "%.2f"|format(product.original_price) }}</span>{% endif %}
+          </div>
+          <button onclick="addToCartFromWishlist({{ product.id }}, this)"
+            class="bg-primary hover:brightness-110 text-white w-11 h-11 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-primary/20 active:scale-95"
+            title="Add to cart">
+            <span class="material-symbols-outlined font-bold">add_shopping_cart</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <!-- Empty State -->
+  <div class="text-center py-28 bg-white border border-dashed border-slate-200 rounded-3xl">
+    <div class="w-24 h-24 rounded-3xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-6">
+      <span class="material-symbols-outlined text-red-300 text-5xl" style="font-variation-settings:'FILL' 1">favorite</span>
+    </div>
+    <h2 class="text-2xl font-black text-slate-800 mb-2">Your wishlist is empty</h2>
+    <p class="text-slate-500 mb-8 text-sm max-w-xs mx-auto">Browse our shop and tap the heart icon to save products you love.</p>
+    <a href="/products" class="inline-flex items-center gap-2 bg-primary text-black font-bold px-8 py-4 rounded-2xl hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+      <span class="material-symbols-outlined">storefront</span> Start Shopping
+    </a>
+  </div>
+  {% endif %}
+
+</main>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+async function removeFromWishlist(productId) {
+    const resp = await fetch('/api/wishlist/toggle', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({product_id: productId})
+    });
+    const data = await resp.json();
+    if (data.success && !data.wishlisted) {
+        const card = document.getElementById('wish-card-' + productId);
+        if (card) {
+            card.style.transition = 'all 0.35s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.92)';
+            setTimeout(() => { card.remove(); updateWishBadge(data.count); }, 350);
+        }
+        showToast('Removed from wishlist');
+    }
+}
+
+async function addToCartFromWishlist(productId, btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">sync</span>';
+    const resp = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({product_id: productId})
+    });
+    if (resp.redirected || resp.status === 302) { window.location.href = '/login'; return; }
+    const data = await resp.json();
+    if (data.success) {
+        updateCartBadge(data.cart_count);
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings:\'FILL\' 1">check_circle</span>';
+        btn.classList.replace('bg-primary', 'bg-green-500');
+        setTimeout(() => {
+            btn.innerHTML = '<span class="material-symbols-outlined font-bold">add_shopping_cart</span>';
+            btn.classList.replace('bg-green-500', 'bg-primary');
+            btn.disabled = false;
+        }, 1500);
+        showToast('Added to cart!');
+    }
+}
+
+function updateWishBadge(count) {
+    const badge = document.getElementById('wish-badge');
+    if (!badge) return;
+    if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %}

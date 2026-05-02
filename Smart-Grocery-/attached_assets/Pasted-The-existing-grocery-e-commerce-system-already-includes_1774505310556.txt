@@ -1,0 +1,121 @@
+The existing grocery e-commerce system already includes a working frontend UI, backend, authentication, cart system, order management, AI recommendation system, and role-based dashboards (Customer, Vendor, Admin).
+
+Now I want to further enhance the system with improved authentication and advanced dashboards.
+
+Please implement the following updates:
+
+---
+
+1. **Separate Login Systems**
+
+* Create two completely separate login systems:
+
+  * Customer Login (existing)
+  * Vendor Login (new, separate page and route)
+* Do NOT use the same login page for vendors and customers.
+* Vendor login should have its own UI page (e.g., /vendor-login).
+
+---
+
+2. **Vendor Account Security**
+
+* Implement secure password handling for vendors:
+
+  * Hash passwords before storing in the database
+  * Use secure authentication practices
+* Add validation:
+
+  * Strong password requirements (minimum length, special characters, etc.)
+* Allow vendors to:
+
+  * Change password
+  * Reset password (basic implementation)
+
+---
+
+3. **Role-Based Redirection**
+
+* After login:
+
+  * Customer → Homepage
+  * Vendor → Vendor Dashboard
+  * Admin → Admin Dashboard
+
+---
+
+4. **Vendor Business Dashboard (Analytics Panel)**
+
+Enhance the Vendor Dashboard by adding a **Business Analytics section**:
+
+* Total products uploaded
+* Total orders received
+* Total revenue generated
+* Most sold products
+* Recently sold items
+* Order status breakdown (pending, shipped, delivered)
+
+Display analytics using:
+
+* Charts or summary cards (UI-based if needed)
+* Clean and professional layout
+
+---
+
+5. **Admin Business Dashboard**
+
+Enhance Admin Dashboard with full system analytics:
+
+* Total users (customers + vendors)
+* Total vendors
+* Total products
+* Total orders
+* Total revenue across platform
+* Top-selling products
+* Top-performing vendors
+
+Optional:
+
+* Graphs/charts for sales trends
+
+---
+
+6. **Database Enhancements**
+   Update database schema to support:
+
+* Separate vendor credentials if needed
+* Order tracking with vendor linkage
+* Revenue calculations
+* Analytics data aggregation
+
+---
+
+7. **Frontend Updates**
+
+* Create a dedicated Vendor Login page UI
+* Add dashboard UI sections for analytics (cards, charts, tables)
+* Maintain consistent design with existing UI
+
+---
+
+8. **Security & Access Control**
+
+* Ensure:
+
+  * Vendors cannot access admin dashboard
+  * Customers cannot access vendor dashboard
+* Protect all routes using role-based middleware or checks
+
+---
+
+9. **Maintain Existing Features**
+   Do not break:
+
+* Customer flow
+* Cart functionality
+* Order system
+* AI recommendation system
+
+---
+
+Goal:
+Transform the system into a **secure multi-role e-commerce platform** with separate login systems and advanced business dashboards for both vendors and administrators.

@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% block title %}Shop - Smart Grocery{% endblock %}
+{% block extra_styles %}
+.product-card-hover:hover{transform:translateY(-8px);box-shadow:0 20px 25px -5px rgba(19,236,19,0.1)}
+#autocomplete-box { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:50; }
+{% endblock %}
+{% block content %}
+<main class="max-w-7xl mx-auto flex gap-8 px-6 py-8">
+  <!-- Sidebar -->
+  <aside class="w-64 shrink-0 hidden lg:block sticky top-24 h-fit">
+    <div class="space-y-8">
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">Categories</h3>
+        <ul class="space-y-1">
+          <li>
+            <a href="/products?category=All{% if search %}&search={{ search }}{% endif %}" class="flex items-center gap-3 px-3 py-2 rounded-lg {% if selected_category == 'All' %}bg-primary/10 text-primary font-semibold{% else %}hover:bg-slate-100 text-slate-600{% endif %} text-sm transition-colors">
+              <span class="material-symbols-outlined text-lg">grid_view</span><span>All Products</span>
+            </a>
+          </li>
+          {% for cat in categories %}
+          <li>
+            <a href="/products?category={{ cat|urlencode }}{% if search %}&search={{ search }}{% endif %}" class="flex items-center gap-3 px-3 py-2 rounded-lg {% if selected_category == cat %}bg-primary/10 text-primary font-semibold{% else %}hover:bg-slate-100 text-slate-600{% endif %} text-sm transition-colors">
+              <span class="material-symbols-outlined text-lg">{% if 'Produce' in cat %}potted_plant{% elif 'Bakery' in cat %}bakery_dining{% elif 'Dairy' in cat %}egg{% elif 'Meat' in cat %}set_meal{% else %}kitchen{% endif %}</span>
+              <span>{{ cat }}</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1">
+    <!-- Search + Sort -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900 mb-1">{{ selected_category if selected_category != 'All' else 'All Products' }}</h2>
+        <p class="text-sm text-slate-500">{{ products|length }} products found{% if search %} for "{{ search }}"{% endif %}</p>
+      </div>
+      <form method="GET" action="/products" class="flex items-center gap-3 flex-wrap" autocomplete="off">
+        {% if selected_category and selected_category != 'All' %}<input type="hidden" name="category" value="{{ selected_category }}"/>{% endif %}
+        <!-- Autocomplete Search Input -->
+        <div class="relative" id="search-wrapper">
+          <input type="text" name="search" id="search-input" value="{{ search }}" placeholder="Search products..."
+            class="border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white w-64"
+            oninput="onSearchInput(this.value)" onblur="hideAutocomplete()" onfocus="onSearchInput(this.value)"/>
+          <!-- Autocomplete dropdown -->
+          <div id="autocomplete-box" class="hidden bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-200/80 overflow-hidden">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+        <select name="sort" class="border border-slate-200 rounded-xl py-2.5 pl-4 pr-10 text-sm focus:ring-2 focus:ring-primary bg-white cursor-pointer" onchange="this.form.submit()">
+          <option value="featured" {% if sort=='featured' %}selected{% endif %}>Featured</option>
+          <option value="price_asc" {% if sort=='price_asc' %}selected{% endif %}>Price: Low to High</option>
+          <option value="price_desc" {% if sort=='price_desc' %}selected{% endif %}>Price: High to Low</option>
+        </select>
+        <button type="submit" class="bg-primary text-black px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-105 transition-all">Search</button>
+      </form>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+      {% for product in products %}
+      <div class="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 flex flex-col product-card-hover">
+        <div class="relative aspect-square bg-slate-50 overflow-hidden">
+          <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="{{ product.image_url }}" alt="{{ product.name }}"/>
+          {% if product.badge %}
+          <div class="absolute top-3 left-3">
+            <span class="{% if product.badge == 'Sale' %}bg-red-500{% elif product.badge == 'New' %}bg-blue-500{% else %}bg-primary{% endif %} text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm uppercase tracking-wider">{{ product.badge }}</span>
+          </div>
+          {% endif %}
+          <!-- Wishlist Heart -->
+          {% if logged_in %}
+          <button onclick="toggleWish({{ product.id }}, this)"
+            class="wish-btn-{{ product.id }} absolute top-3 right-3 w-9 h-9 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-sm hover:scale-110 transition-all"
+            title="Save to wishlist">
+            <span class="material-symbols-outlined text-[20px] text-slate-400 wish-icon">favorite</span>
+          </button>
+          {% endif %}
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <p class="text-[10px] uppercase font-bold tracking-widest text-slate-400 mb-1">{{ product.brand }}</p>
+          <h3 class="font-bold text-slate-800 mb-1 line-clamp-2 leading-snug">{{ product.name }}</h3>
+          <p class="text-xs text-slate-500 mb-5">{{ product.unit }}</p>
+          <div class="mt-auto flex items-center justify-between pt-2">
+            <div>
+              <span class="text-xl font-black text-slate-900">${{ "%.2f"|format(product.price) }}</span>
+              {% if product.original_price %}<span class="text-xs text-slate-400 line-through ml-1.5">${{ "%.2f"|format(product.original_price) }}</span>{% endif %}
+            </div>
+            {% if cart_items.get(product.id) %}
+            <div class="flex items-center gap-1.5 bg-slate-100 rounded-xl px-2.5 py-1.5 border border-slate-200">
+              <button onclick="changeQty({{ product.id }}, {{ cart_items[product.id] }}, -1, this)" class="w-8 h-8 flex items-center justify-center text-primary hover:bg-white rounded-lg transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">remove</span>
+              </button>
+              <span class="font-black text-sm min-w-[24px] text-center" data-qty="{{ product.id }}">{{ cart_items[product.id] }}</span>
+              <button onclick="changeQty({{ product.id }}, {{ cart_items[product.id] }}, 1, this)" class="w-8 h-8 flex items-center justify-center text-primary hover:bg-white rounded-lg transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+              </button>
+            </div>
+            {% else %}
+            <button onclick="addToCartBtn({{ product.id }}, this)" class="bg-primary hover:brightness-110 text-white w-11 h-11 rounded-xl flex items-center justify-center transition-all shadow-lg shadow-primary/20 active:scale-95 add-btn-{{ product.id }}">
+              <span class="material-symbols-outlined font-bold">add</span>
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-span-full text-center py-20">
+        <span class="material-symbols-outlined text-6xl text-slate-300">search_off</span>
+        <p class="text-slate-500 mt-4 text-lg">No products found</p>
+        <a href="/products" class="text-primary font-bold hover:underline mt-2 inline-block">Clear filters</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+// ─── Wishlist ──────────────────────────────────────────────────────────────
+let wishlistedIds = new Set();
+
+(async function loadWishlistStatus() {
+    try {
+        const resp = await fetch('/api/wishlist/status');
+        if (!resp.ok) return;
+        const data = await resp.json();
+        wishlistedIds = new Set(data.wishlisted_ids);
+        updateWishBadge(data.count);
+        // Apply filled hearts on page load
+        wishlistedIds.forEach(pid => markWished(pid, true));
+    } catch(e) {}
+})();
+
+function markWished(productId, wishlisted) {
+    const btns = document.querySelectorAll(`.wish-btn-${productId}`);
+    btns.forEach(btn => {
+        const icon = btn.querySelector('.wish-icon');
+        if (!icon) return;
+        if (wishlisted) {
+            icon.style.setProperty('font-variation-settings', "'FILL' 1");
+            icon.classList.replace('text-slate-400', 'text-red-500');
+        } else {
+            icon.style.setProperty('font-variation-settings', "'FILL' 0");
+            icon.classList.replace('text-red-500', 'text-slate-400');
+        }
+    });
+}
+
+async function toggleWish(productId, btn) {
+    btn.classList.add('scale-125');
+    setTimeout(() => btn.classList.remove('scale-125'), 200);
+    const resp = await fetch('/api/wishlist/toggle', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({product_id: productId})
+    });
+    if (resp.status === 401) { window.location.href = '/login'; return; }
+    const data = await resp.json();
+    if (data.success) {
+        if (data.wishlisted) { wishlistedIds.add(productId); } else { wishlistedIds.delete(productId); }
+        markWished(productId, data.wishlisted);
+        updateWishBadge(data.count);
+        showToast(data.wishlisted ? '❤️ Saved to wishlist!' : 'Removed from wishlist');
+    }
+}
+
+function updateWishBadge(count) {
+    const badge = document.getElementById('wish-badge');
+    if (!badge) return;
+    if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+    else { badge.classList.add('hidden'); }
+}
+
+// ─── Search Autocomplete ───────────────────────────────────────────────────
+let _autocompleteTimer;
+
+function onSearchInput(val) {
+    clearTimeout(_autocompleteTimer);
+    if (val.length < 2) { hideAutocomplete(); return; }
+    _autocompleteTimer = setTimeout(() => fetchSuggestions(val), 280);
+}
+
+async function fetchSuggestions(q) {
+    const box = document.getElementById('autocomplete-box');
+    try {
+        const resp = await fetch(`/api/search/autocomplete?q=${encodeURIComponent(q)}`);
+        const suggestions = await resp.json();
+        if (!suggestions.length) { hideAutocomplete(); return; }
+        box.innerHTML = suggestions.map(s => `
+          <a href="/products?search=${encodeURIComponent(s.name)}"
+             class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 cursor-pointer">
+            <img src="${s.image_url}" class="w-10 h-10 rounded-xl object-cover bg-slate-100 shrink-0" onerror="this.src='https://via.placeholder.com/40'"/>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-bold text-slate-800 truncate">${s.name}</p>
+              <p class="text-xs text-slate-400">${s.brand} · <span class="text-primary font-bold">$${s.price.toFixed(2)}</span></p>
+            </div>
+            <span class="material-symbols-outlined text-slate-300 text-[18px]">arrow_forward_ios</span>
+          </a>`).join('');
+        box.classList.remove('hidden');
+    } catch(e) { hideAutocomplete(); }
+}
+
+function hideAutocomplete() {
+    setTimeout(() => {
+        const box = document.getElementById('autocomplete-box');
+        if (box) box.classList.add('hidden');
+    }, 200);
+}
+
+// ─── Cart Functions ────────────────────────────────────────────────────────
+function addToCartBtn(productId, btn) {
+    addToCart(productId).then(() => {
+        const btnParent = btn.parentElement;
+        btnParent.innerHTML = `
+            <div class="flex items-center gap-1 bg-slate-100 rounded-lg px-2 py-1">
+                <button onclick="changeQty(${productId}, 1, -1, this)" class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white rounded transition-all"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+                <span class="font-bold text-sm min-w-[20px] text-center qty-${productId}">1</span>
+                <button onclick="changeQty(${productId}, 1, 1, this)" class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white rounded transition-all"><span class="material-symbols-outlined text-[18px]">add</span></button>
+            </div>`;
+    });
+}
+async function addToCart(productId) {
+    const resp = await fetch('/api/cart/add', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:productId})});
+    if (resp.redirected || resp.status === 302) { window.location.href='/login'; return; }
+    const data = await resp.json();
+    if (data.success) { updateCartBadge(data.cart_count); showToast('Added to cart!'); }
+}
+async function changeQty(productId, currentQty, delta, btn) {
+    const newQty = currentQty + delta;
+    const resp = await fetch('/api/cart/update', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:productId,quantity:newQty})});
+    const data = await resp.json();
+    if (data.success) {
+        updateCartBadge(data.cart_count);
+        const container = btn.closest('.flex.items-center');
+        const qtyEl = container.querySelector(`[data-qty="${productId}"]`);
+        if (newQty <= 0) {
+            container.parentElement.innerHTML = `<button onclick="addToCartBtn(${productId}, this)" class="bg-primary hover:bg-primary/90 text-white w-9 h-9 rounded-lg flex items-center justify-center transition-colors shadow-lg shadow-primary/20 active:scale-95"><span class="material-symbols-outlined">add</span></button>`;
+        } else {
+            if (qtyEl) qtyEl.textContent = newQty;
+            const btns = container.querySelectorAll('button');
+            btns[0] && btns[0].setAttribute('onclick', `changeQty(${productId}, ${newQty}, -1, this)`);
+            btns[1] && btns[1].setAttribute('onclick', `changeQty(${productId}, ${newQty}, 1, this)`);
+        }
+    }
+}
+</script>
+{% endblock %}

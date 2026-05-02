@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Track Order #{{ group.id }} - Smart Grocery{% endblock %}
+{% block extra_styles %}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pulse-dot{animation:pulse-dot 1.5s ease-in-out infinite}
+.animate-fade-in-up{animation:fadeInUp 0.6s ease-out forwards}
+{% endblock %}
+{% block content %}
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 animate-fade-in-up">
+  <a href="/orders" class="inline-flex items-center gap-2 text-slate-500 hover:text-primary text-sm font-medium mb-6 transition-colors">
+    <span class="material-symbols-outlined text-[20px]">arrow_back_ios</span> Back to Orders
+  </a>
+
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl font-black tracking-tight">Order #{{ group.id }}</h1>
+      <p class="text-slate-500 mt-1">Placed {{ group.created_at[:10] }}</p>
+    </div>
+    <div class="bg-primary/10 border border-primary/30 px-4 py-2 rounded-full">
+      <span class="text-primary font-bold text-sm flex items-center gap-2">
+        <span class="size-2.5 rounded-full bg-primary pulse-dot inline-block"></span>
+        {{ vendor_orders|length }} vendor{{ 's' if vendor_orders|length > 1 else '' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Multi-vendor notice -->
+  {% if vendor_orders|length > 1 %}
+  <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+    <span class="material-symbols-outlined text-blue-500 text-xl shrink-0" style="font-variation-settings:'FILL' 1">info</span>
+    <p class="text-blue-700 text-sm">This order has items from <strong>{{ vendor_orders|length }} vendors</strong>. Each vendor ships their items independently. You may receive deliveries at different times.</p>
+  </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Vendor-wise tracking -->
+    <div class="lg:col-span-2 space-y-5">
+      {% for vo in vendor_orders %}
+      {% set vsteps = ['pending', 'confirmed', 'shipped', 'delivered'] %}
+      {% set cur_idx = vsteps.index(vo.status) if vo.status in vsteps else 0 %}
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <!-- Vendor header -->
+        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">storefront</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-bold text-slate-900">{{ vo.vendor_name }}</p>
+            <p class="text-xs text-slate-500">{{ vo.line_items|length }} item(s) · ${{ "%.2f"|format(vo.subtotal) }}</p>
+          </div>
+          <span class="text-xs font-bold px-3 py-1.5 rounded-full
+            {% if vo.status == 'delivered' %}bg-green-100 text-green-700
+            {% elif vo.status == 'shipped' %}bg-blue-100 text-blue-700
+            {% elif vo.status == 'confirmed' %}bg-yellow-100 text-yellow-700
+            {% else %}bg-slate-100 text-slate-500{% endif %}">
+            {% if vo.status == 'shipped' %}In Transit
+            {% else %}{{ vo.status|title }}{% endif %}
+          </span>
+        </div>
+
+        <!-- Timeline -->
+        <div class="p-6">
+          {% set step_data = [
+            ('Order Placed', 'check_circle', 'Vendor has received your order.'),
+            ('Order Confirmed', 'task_alt', 'Vendor has confirmed and is preparing your items.'),
+            ('Shipped', 'local_shipping', 'Your items are on the way!'),
+            ('Delivered', 'home', 'Delivered to your doorstep.'),
+          ] %}
+          <div class="flex flex-col gap-0">
+            {% for i in range(4) %}
+            {% set label, icon, desc = step_data[i] %}
+            {% set done = i <= cur_idx %}
+            {% set active = i == cur_idx %}
+            <div class="flex gap-4 {% if not loop.last %}pb-6{% endif %} relative">
+              {% if not loop.last %}
+              <div class="absolute left-5 top-10 bottom-0 w-0.5 {% if i < cur_idx %}bg-primary{% else %}bg-slate-200{% endif %}"></div>
+              {% endif %}
+              <div class="size-10 rounded-full shrink-0 z-10 flex items-center justify-center
+                {% if done %}bg-primary{% elif active %}bg-primary/20 border-2 border-primary{% else %}bg-slate-100 border-2 border-slate-200{% endif %}">
+                <span class="material-symbols-outlined text-[20px] {% if done %}text-white{% elif active %}text-primary{% else %}text-slate-400{% endif %}"
+                      style="font-variation-settings:'FILL' {% if done or active %}1{% else %}0{% endif %}">{{ icon }}</span>
+              </div>
+              <div class="pt-1">
+                <p class="font-bold {% if not done and not active %}text-slate-400{% endif %}">{{ label }}</p>
+                <p class="text-sm text-slate-500 mt-0.5">{{ desc }}</p>
+                {% if done and not active %}<p class="text-xs text-primary font-bold mt-1">Completed ✓</p>
+                {% elif active %}<p class="text-xs text-primary font-bold mt-1 flex items-center gap-1"><span class="size-1.5 rounded-full bg-primary pulse-dot inline-block"></span> Current Status</p>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Items in this vendor order -->
+        <div class="px-6 pb-5">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Items from this vendor</p>
+          <div class="space-y-2">
+            {% for item in vo.line_items %}
+            <div class="flex items-center gap-3">
+              <div class="size-10 rounded-lg overflow-hidden border border-slate-200 shrink-0">
+                <img src="{{ item.image_url }}" alt="{{ item.name }}" class="w-full h-full object-cover"/>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-sm truncate">{{ item.name }}</p>
+                <p class="text-xs text-slate-400">Qty: {{ item.quantity }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Right Column: Order Info -->
+    <div class="space-y-5">
+
+      <!-- Delivery Address -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h2 class="text-base font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">location_on</span> Delivery Info
+        </h2>
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-sm">
+          <div>
+            <p class="text-xs text-slate-400 font-medium">Address</p>
+            <p class="font-semibold text-slate-900">{{ group.address }}</p>
+          </div>
+          <div class="flex gap-6">
+            <div>
+              <p class="text-xs text-slate-400 font-medium">PIN Code</p>
+              <p class="font-semibold text-slate-900">{{ group.pincode }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-400 font-medium">Mobile</p>
+              <p class="font-semibold text-slate-900">{{ group.mobile }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bill Summary -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h2 class="text-base font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">receipt</span> Bill Summary
+        </h2>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-slate-500">Subtotal</span><span class="font-medium">${{ "%.2f"|format(group.total_amount - group.delivery_fee - group.tax) }}</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Delivery</span><span class="font-medium">{% if group.delivery_fee == 0 %}<span class="text-primary font-bold">FREE</span>{% else %}${{ "%.2f"|format(group.delivery_fee) }}{% endif %}</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Tax</span><span class="font-medium">${{ "%.2f"|format(group.tax) }}</span></div>
+          <div class="border-t border-slate-200 pt-2 flex justify-between items-center">
+            <span class="font-bold text-lg">Total</span>
+            <span class="font-black text-xl text-primary">${{ "%.2f"|format(group.total_amount) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vendor Status Summary -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h2 class="text-base font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">donut_large</span> Vendor Status
+        </h2>
+        <div class="space-y-2">
+          {% for vo in vendor_orders %}
+          <div class="flex items-center gap-3 p-2 rounded-lg bg-slate-50">
+            <span class="text-xs font-bold text-slate-600 flex-1 truncate">{{ vo.vendor_name }}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full
+              {% if vo.status == 'delivered' %}bg-green-100 text-green-700
+              {% elif vo.status == 'shipped' %}bg-blue-100 text-blue-700
+              {% elif vo.status == 'confirmed' %}bg-yellow-100 text-yellow-700
+              {% else %}bg-slate-200 text-slate-500{% endif %}">
+              {{ vo.status|title }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+{% endblock %}

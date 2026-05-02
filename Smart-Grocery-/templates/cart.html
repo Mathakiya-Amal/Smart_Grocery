@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Cart - Smart Grocery{% endblock %}
+{% block extra_styles %}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.animate-float{animation:float 3s ease-in-out infinite}
+{% endblock %}
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+  <nav class="flex items-center gap-2 text-sm text-slate-500 mb-6">
+    <a href="/" class="hover:text-primary">Home</a>
+    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+    <a href="/products" class="hover:text-primary">Shop</a>
+    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+    <span class="text-slate-900 font-medium">Cart</span>
+  </nav>
+  <h1 class="text-3xl font-black tracking-tight mb-2">Your Shopping Cart</h1>
+  <p class="text-slate-500 mb-8">Review your items before checking out.</p>
+
+  {% if items %}
+
+  {% if multi_vendor %}
+  <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+    <span class="material-symbols-outlined text-blue-500 text-2xl shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1">info</span>
+    <div>
+      <p class="font-bold text-blue-900 text-sm">Multi-Vendor Order</p>
+      <p class="text-blue-700 text-xs mt-0.5">Your cart contains items from <strong>{{ vendor_groups|length }} vendors</strong>. These will be processed and delivered separately by each vendor.</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2 space-y-4">
+
+      {% for vendor_name, vitems in vendor_groups.items() %}
+      <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+        {% if multi_vendor %}
+        <div class="px-5 py-3 bg-slate-50 border-b border-slate-200 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings:'FILL' 1">storefront</span>
+          <span class="font-bold text-sm text-slate-800">{{ vendor_name }}</span>
+          <span class="ml-auto text-xs text-slate-400">{{ vitems|length }} item(s) · ${{ "%.2f"|format(vitems|sum(attribute='price') * 1) }}</span>
+        </div>
+        {% endif %}
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50/60 text-slate-500 text-xs font-bold uppercase tracking-wider">
+              <th class="px-4 py-3">Product</th>
+              <th class="px-4 py-3 hidden sm:table-cell">Details</th>
+              <th class="px-4 py-3 text-center">Qty</th>
+              <th class="px-4 py-3 text-right">Price</th>
+              <th class="px-4 py-3 text-center">Remove</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for item in vitems %}
+            <tr class="hover:bg-slate-50/50 transition-colors" id="row-{{ item.product_id }}">
+              <td class="px-4 py-4">
+                <div class="w-14 h-14 rounded-lg bg-slate-100 overflow-hidden">
+                  <img class="w-full h-full object-cover" src="{{ item.image_url }}" alt="{{ item.name }}"/>
+                </div>
+              </td>
+              <td class="px-4 py-4 hidden sm:table-cell">
+                <p class="font-bold text-slate-900">{{ item.name }}</p>
+                <p class="text-xs text-slate-500">{{ item.brand }}</p>
+              </td>
+              <td class="px-4 py-4">
+                <div class="flex items-center justify-center gap-2 bg-slate-100 w-fit mx-auto rounded-xl px-2 py-1 border border-slate-200">
+                  <button onclick="updateQty({{ item.product_id }}, {{ item.quantity }}, -1)" class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white rounded transition-all">
+                    <span class="material-symbols-outlined text-[18px]">remove</span>
+                  </button>
+                  <span class="font-bold text-sm min-w-[20px] text-center" id="qty-{{ item.product_id }}">{{ item.quantity }}</span>
+                  <button onclick="updateQty({{ item.product_id }}, {{ item.quantity }}, 1)" class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white rounded transition-all">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                  </button>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-right font-semibold text-slate-900" id="price-{{ item.product_id }}">${{ "%.2f"|format(item.price * item.quantity) }}</td>
+              <td class="px-4 py-4 text-center">
+                <button onclick="removeItem({{ item.product_id }})" class="text-slate-400 hover:text-red-500 transition-colors">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+
+      <div class="flex justify-between items-center px-2">
+        <a href="/products" class="flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+          <span class="material-symbols-outlined text-[20px]">arrow_back</span> Continue Shopping
+        </a>
+        <p class="text-xs text-slate-400">Items held for 60 minutes</p>
+      </div>
+
+      {% if subtotal < 30 %}
+      <div class="p-5 border-2 border-dashed border-primary/30 rounded-xl bg-primary/5 flex items-center justify-between animate-float">
+        <div class="flex items-center gap-4">
+          <span class="material-symbols-outlined text-primary text-3xl">redeem</span>
+          <div>
+            <p class="font-bold text-slate-900 text-sm">Add ${{ "%.2f"|format(30 - subtotal) }} more for Free Delivery!</p>
+            <p class="text-xs text-slate-500">Free delivery on orders above $30.00</p>
+          </div>
+        </div>
+        <a href="/products" class="bg-primary/20 text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all">Browse More</a>
+      </div>
+      {% else %}
+      <div class="p-5 border-2 border-solid border-primary/30 rounded-xl bg-primary/5 flex items-center gap-4">
+        <span class="material-symbols-outlined text-primary text-3xl">check_circle</span>
+        <p class="font-bold text-slate-900 text-sm">You qualify for Free Delivery!</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="lg:col-span-1">
+      <div class="sticky top-24 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden">
+        <div class="p-6 border-b border-slate-200"><h3 class="text-lg font-black">Bill Summary</h3></div>
+        <div class="p-6 space-y-4">
+          <div class="flex justify-between text-sm"><span class="text-slate-500">Subtotal ({{ items|length }} items)</span><span class="font-medium" id="subtotal-display">${{ "%.2f"|format(subtotal) }}</span></div>
+          <div class="flex justify-between text-sm"><span class="text-slate-500">Delivery Fee</span><span class="font-medium">{% if delivery == 0 %}<span class="text-primary font-bold">FREE</span>{% else %}${{ "%.2f"|format(delivery) }}{% endif %}</span></div>
+          <div class="flex justify-between text-sm"><span class="text-slate-500">Estimated Tax (5%)</span><span class="font-medium">${{ "%.2f"|format(tax) }}</span></div>
+          {% if multi_vendor %}
+          <div class="pt-2 pb-1 text-xs text-blue-600 bg-blue-50 rounded-lg px-3 py-2">
+            <span class="material-symbols-outlined text-[14px] align-middle">info</span>
+            {{ vendor_groups|length }} vendors · Delivered separately
+          </div>
+          {% endif %}
+          <div class="pt-4 border-t border-slate-200 flex justify-between items-center">
+            <span class="text-lg font-bold">Grand Total</span>
+            <span class="text-2xl font-black text-primary" id="total-display">${{ "%.2f"|format(total) }}</span>
+          </div>
+          <a href="/order-summary" class="w-full bg-primary text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 block text-center">
+            Proceed to Checkout <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+          </a>
+          <div class="flex items-center justify-center gap-4 text-slate-400 pt-2">
+            <span class="material-symbols-outlined" title="Secure">verified_user</span>
+            <span class="material-symbols-outlined" title="Cards">credit_card</span>
+            <span class="material-symbols-outlined" title="Contactless">contactless</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center py-24">
+    <span class="material-symbols-outlined text-8xl text-slate-200">shopping_cart</span>
+    <h2 class="text-2xl font-bold text-slate-900 mt-6">Your cart is empty</h2>
+    <p class="text-slate-500 mt-2">Add some fresh products to get started!</p>
+    <a href="/products" class="mt-6 inline-block bg-primary text-black font-bold px-8 py-4 rounded-xl hover:opacity-90 transition-opacity">Start Shopping</a>
+  </div>
+  {% endif %}
+</main>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+const unitPrices = { {% for item in items %}{{ item.product_id }}: {{ item.price }},{% endfor %} };
+
+async function updateQty(productId, currentQty, delta) {
+    const newQty = currentQty + delta;
+    const resp = await fetch('/api/cart/update', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:productId,quantity:newQty})});
+    const data = await resp.json();
+    if (data.success) {
+        updateCartBadge(data.cart_count);
+        if (newQty <= 0) {
+            document.getElementById('row-'+productId).remove();
+            location.reload();
+        } else {
+            document.getElementById('qty-'+productId).textContent = newQty;
+            const priceEl = document.getElementById('price-'+productId);
+            const lineTotal = (unitPrices[productId] * newQty).toFixed(2);
+            priceEl.textContent = '$'+lineTotal;
+            const btns = document.getElementById('row-'+productId).querySelectorAll('button');
+            btns[0].setAttribute('onclick', `updateQty(${productId}, ${newQty}, -1)`);
+            btns[1].setAttribute('onclick', `updateQty(${productId}, ${newQty}, 1)`);
+        }
+    }
+}
+async function removeItem(productId) {
+    const resp = await fetch('/api/cart/remove', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:productId})});
+    const data = await resp.json();
+    if (data.success) { updateCartBadge(data.cart_count); location.reload(); }
+}
+</script>
+{% endblock %}

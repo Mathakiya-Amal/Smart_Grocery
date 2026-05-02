@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Grocery - Freshness Delivered</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(19, 236, 19, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px 10px rgba(19, 236, 19, 0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-pulse-custom { animation: pulse-soft 2s infinite; }
+        .stagger-1 { animation: slideUp 0.6s ease-out forwards; }
+        .stagger-2 { animation: slideUp 0.6s ease-out 0.1s forwards; opacity: 0; }
+        .stagger-3 { animation: slideUp 0.6s ease-out 0.2s forwards; opacity: 0; }
+        .stagger-4 { animation: slideUp 0.6s ease-out 0.3s forwards; opacity: 0; }
+        .leaf-bg {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30">
+<!-- Decorative background elements -->
+<div class="leaf-bg top-20 left-10 animate-float" style="width: 200px; height: 200px;">
+<span class="material-symbols-outlined text-[200px] text-primary">eco</span>
+</div>
+<div class="leaf-bg bottom-40 right-20 animate-float" style="width: 150px; height: 150px; animation-delay: -2s;">
+<span class="material-symbols-outlined text-[150px] text-primary">potted_plant</span>
+</div>
+<!-- Sticky Navigation -->
+<nav class="sticky top-0 z-50 w-full border-b border-primary/10 bg-background-light/80 backdrop-blur-md dark:bg-background-dark/80">
+<div class="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-1.5 rounded-lg flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined font-bold">shopping_basket</span>
+</div>
+<h2 class="text-xl font-black tracking-tight uppercase">Smart<span class="text-primary">Grocery</span></h2>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors border-b-2 border-primary" href="#">Home</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Categories</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Deals</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Orders</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-primary/10 rounded-full px-4 py-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 placeholder:text-slate-500" placeholder="Search fresh items..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2.5 rounded-full bg-primary/10 hover:bg-primary transition-all hover:text-white group">
+<span class="material-symbols-outlined block">shopping_cart</span>
+</button>
+<button class="p-2.5 rounded-full bg-primary/10 hover:bg-primary transition-all hover:text-white group">
+<span class="material-symbols-outlined block">person</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-[1200px] mx-auto px-6">
+<!-- Hero Section -->
+<section class="py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+<div class="flex flex-col gap-8 stagger-1">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
+<span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
+<span class="text-xs font-bold uppercase tracking-wider text-primary">Farm to Table</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-slate-100">
+                    Freshness <br/><span class="text-primary">Delivered</span> <br/>Directly to You.
+                </h1>
+<p class="text-lg text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
+                    Shop organic groceries from local farms. Lightning-fast delivery within 30 minutes to your doorstep.
+                </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="animate-pulse-custom flex items-center justify-center gap-2 px-8 py-4 bg-primary text-background-dark rounded-xl font-bold text-lg hover:brightness-110 transition-all shadow-xl shadow-primary/20">
+<span>Shop Now</span>
+<span class="material-symbols-outlined">trending_flat</span>
+</button>
+<button class="flex items-center justify-center gap-2 px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all">
+<span>View Offers</span>
+</button>
+</div>
+</div>
+<div class="relative animate-float">
+<div class="absolute -inset-4 bg-primary/20 blur-3xl rounded-full"></div>
+<div class="relative w-full aspect-square rounded-[3rem] overflow-hidden border-8 border-white dark:border-slate-800 shadow-2xl">
+<img alt="Fresh Produce Basket" class="w-full h-full object-cover" data-alt="Colorful basket filled with fresh organic vegetables" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGTLBtI8ZCHOHSNcx-4oFt5WstFc9F61yIG9ByPxW4xnIKzorRB9jhgw6uKC01HTV5sVEiolZSmulROgBKkBYYwu_5_g618u5MsaC1endvv5_9WCgp2E-rOWYEnyTf3Q3wLyfHNH2yGop6KlTack7uyEwcQQxYFPB43P0tP0gs9V0hpppPrcMczhDejZfqZ73HkJJFav8FqBIeoau3RFASrPWZJENrhGPBM6jZS3uSo3AGwc29yrNScghe0FN7AjkfHAgqK-9Yiw"/>
+</div>
+<!-- Floating Info Card -->
+<div class="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 flex items-center gap-4 animate-bounce" style="animation-duration: 4s;">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">bolt</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 font-medium">Fast Delivery</p>
+<p class="text-sm font-bold">Under 30 Mins</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Categories Section -->
+<section class="py-20">
+<div class="flex items-end justify-between mb-12">
+<div class="flex flex-col gap-2">
+<h2 class="text-3xl font-black tracking-tight">Shop by Category</h2>
+<div class="h-1.5 w-24 bg-primary rounded-full"></div>
+</div>
+<a class="text-primary font-bold flex items-center gap-1 hover:gap-2 transition-all" href="#">
+                    See All <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 stagger-1">
+<img alt="Fresh Fruits" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Selection of vibrant tropical and local fruits" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfqzaeQgwPKJJsXzcOJoG0ZuuQFpADPmXqrfK-NPC3LzD_pxIcMNNBQFBHiHF-lpkVxN6Xa6FEzyyCG4Tf2eAtkp4Jy6JsOzEfb7Vrn3ZVns_aVUSE8xaIbLe_voJRf--ji-09dpZQKNxBh8jqae2ycV7z1ar1Tg2YL9KbVHJz6J8TNRniVqIEhJwaFbYsXH5jNzRBiNwVFo80f--J9Q_ka_kY4JCV8nzabh9YQUBFMyntC3CD51RMIlp74l4JQkGm2IltzaXNzg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-white text-xl font-black uppercase tracking-wide">Fruits</p>
+<p class="text-primary text-xs font-bold">45+ Varieties</p>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-primary p-2 rounded-full shadow-lg glow-primary">
+<span class="material-symbols-outlined text-background-dark">add_shopping_cart</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 stagger-2">
+<img alt="Organic Vegetables" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Crispy green vegetables and organic roots" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9oY1cAGFRhSHqaE3ESIqOA8s3_hPBC7cdCCml0Ph8WD4-H1AqyeIdDjFCLMOK_u4HPrDlOmxc6tswmB-nq4b3CSYKw0-Q8eD7Ey8_B-mpFgEUrgIPqwdn-Yr-2jkajL8c-NoViR5oHU0Z4VbB0FdY6aJdKTj74ueJNdX3qh-6yj88adn3JzdyoXGRRshalCzn16YlRM7x1Anm6J6RxSyvgFTDqPowt63neRVxYfcx6BejGg7K9pbuMmIzyBGCIuU8NCyrmkpE6w"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-white text-xl font-black uppercase tracking-wide">Vegetables</p>
+<p class="text-primary text-xs font-bold">60+ Varieties</p>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-background-dark">add_shopping_cart</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 stagger-3">
+<img alt="Dairy Products" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Fresh milk, cheese, and dairy products" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeZ-M2KxHR7DL_rffkqynXZeOsChi9A9QTgM-t-UFXoV3bLnwqNh6QoPGBe2okASSqW6MEZAEc9R0ofv76Ejl1LxwxLKNwV3ES_ukYnIUHSqHKqssPvgiXAneyrcB02juOA72erPabKsdBH4RB-gNPfh0GmZfSSi0TtBUIJZAAnV0PgEqykFeNX9AJVVxsX0e-4dcZDJ2nhEN74j6e4SfqJaNYAu4WAZ50eI1ToQOypLUbGk7Gi-fmkZV-ZV-DCd0o7ujtNLoThw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-white text-xl font-black uppercase tracking-wide">Dairy</p>
+<p class="text-primary text-xs font-bold">20+ Varieties</p>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-background-dark">add_shopping_cart</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative aspect-[4/5] rounded-3xl overflow-hidden cursor-pointer bg-white shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 stagger-4">
+<img alt="Bakery Items" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Freshly baked artisanal sourdough bread" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAyAUP8LIFyG2vSwOWLxT3HWJK707TXdfVCfRCJewjYVRJaSHDBWFTlhKSmH-KAJeUjdlkB38eH-Jz1vWyafWrGwkz8gGwWdABZf7nSqyfvfZfp2TDjb0UAjlaK7gwXc4OM6ke-fH3gzDLIdmW4EliIbKNw1mQYGC1gTBT0DpVP4q78VVYd--mXoj99No7tMMi1vawoFV7mEiHWO5PYoh3dE0xrx9SNQawgDMKcnpUl_eVetOm_OtxJ5E_Wr9yUj448Ar-gBy6DQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<p class="text-white text-xl font-black uppercase tracking-wide">Bakery</p>
+<p class="text-primary text-xs font-bold">15+ Varieties</p>
+</div>
+<div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-primary p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-background-dark">add_shopping_cart</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Banner -->
+<section class="py-12 bg-primary/10 rounded-[2rem] px-8 grid md:grid-cols-3 gap-8 mb-20">
+<div class="flex items-center gap-4">
+<div class="size-14 rounded-2xl bg-primary flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined text-3xl">verified</span>
+</div>
+<div>
+<h4 class="font-bold">100% Organic</h4>
+<p class="text-sm text-slate-600 dark:text-slate-400">Certified farm fresh goods</p>
+</div>
+</div>
+<div class="flex items-center gap-4 border-y md:border-y-0 md:border-x border-primary/20 py-8 md:py-0 md:px-8">
+<div class="size-14 rounded-2xl bg-primary flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined text-3xl">local_shipping</span>
+</div>
+<div>
+<h4 class="font-bold">Free Delivery</h4>
+<p class="text-sm text-slate-600 dark:text-slate-400">On all orders above $50</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-14 rounded-2xl bg-primary flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined text-3xl">support_agent</span>
+</div>
+<div>
+<h4 class="font-bold">24/7 Support</h4>
+<p class="text-sm text-slate-600 dark:text-slate-400">Dedicated customer care</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-900 text-slate-300 py-16 px-6">
+<div class="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-12">
+<div class="col-span-2 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<div class="bg-primary p-1.5 rounded-lg flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined font-bold">shopping_basket</span>
+</div>
+<h2 class="text-xl font-black tracking-tight text-white uppercase">Smart<span class="text-primary">Grocery</span></h2>
+</div>
+<p class="text-sm leading-relaxed mb-6">Making organic groceries accessible to everyone, everywhere. Your health is our priority.</p>
+<div class="flex gap-4">
+<div class="size-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-slate-900 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-xl">language</span>
+</div>
+<div class="size-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-slate-900 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-xl">share</span>
+</div>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Shop</h4>
+<ul class="flex flex-col gap-4 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">All Products</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Seasonal Specials</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Subscription</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Company</h4>
+<ul class="flex flex-col gap-4 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Sustainability</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6 uppercase text-xs tracking-widest">Newsletter</h4>
+<p class="text-xs mb-4">Get the latest deals and organic tips.</p>
+<div class="flex items-center bg-slate-800 rounded-lg p-1">
+<input class="bg-transparent border-none focus:ring-0 text-sm flex-1 pl-3" placeholder="Email" type="text"/>
+<button class="bg-primary text-slate-900 px-4 py-2 rounded-md font-bold text-xs">Join</button>
+</div>
+</div>
+</div>
+</footer>
+<!-- Floating Action Button -->
+<div class="fixed bottom-8 right-8 z-[60]">
+<button class="size-16 rounded-full bg-primary text-background-dark shadow-2xl shadow-primary/40 flex items-center justify-center hover:scale-110 transition-transform animate-pulse-custom">
+<span class="material-symbols-outlined text-3xl">chat</span>
+</button>
+</div>
+</body></html>

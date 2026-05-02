@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login &amp; Signup | Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen transition-colors duration-300">
+<!-- Top Navigation Bar Component -->
+<header class="w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark px-6 md:px-12 py-4 flex items-center justify-between sticky top-0 z-50">
+<div class="flex items-center gap-2 text-[#0d1b0d] dark:text-white">
+<div class="size-8 text-primary">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">Smart Grocery</h2>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex items-center gap-6">
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="#">Products</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="#">Help</a>
+</nav>
+<button class="bg-primary text-black px-5 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
+                Store Locator
+            </button>
+</div>
+<button class="md:hidden text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex flex-col items-center justify-center px-4 py-12 md:py-20">
+<!-- Authentication Card -->
+<div class="w-full max-w-md bg-white dark:bg-zinc-900 rounded-xl shadow-xl overflow-hidden border border-gray-100 dark:border-zinc-800">
+<div class="p-8">
+<!-- Header Section -->
+<div class="text-center mb-8">
+<h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h1>
+<p class="text-gray-500 dark:text-gray-400">Start Your Fresh Journey with Smart Grocery</p>
+</div>
+<!-- Tab Switcher -->
+<div class="flex p-1 bg-gray-100 dark:bg-zinc-800 rounded-lg mb-8">
+<button class="flex-1 py-2 text-sm font-semibold rounded-md bg-white dark:bg-zinc-700 text-gray-900 dark:text-white shadow-sm transition-all">
+                        Login
+                    </button>
+<button class="flex-1 py-2 text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-all">
+                        Sign Up
+                    </button>
+</div>
+<!-- Form -->
+<form class="space-y-5" onsubmit="return false;">
+<!-- Email Field -->
+<div class="space-y-1.5">
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="email">Email Address</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 text-xl">mail</span>
+<input class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-gray-400" id="email" placeholder="name@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="password">Password</label>
+<a class="text-xs font-semibold text-primary hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 text-xl">lock</span>
+<input class="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-gray-400" id="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" type="button">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center">
+<input class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary dark:focus:ring-offset-zinc-900 dark:bg-zinc-800 dark:border-zinc-700" id="remember" type="checkbox"/>
+<label class="ml-2 text-sm text-gray-600 dark:text-gray-400" for="remember">Keep me logged in</label>
+</div>
+<!-- Submit Button -->
+<button class="w-full py-3.5 bg-primary hover:bg-opacity-90 text-black font-bold rounded-lg shadow-md shadow-primary/20 transition-all flex items-center justify-center gap-2" type="submit">
+<span>Login to Dashboard</span>
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="relative my-8">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-gray-200 dark:border-zinc-800"></div>
+</div>
+<div class="relative flex justify-center text-sm">
+<span class="px-2 bg-white dark:bg-zinc-900 text-gray-500">Or continue with</span>
+</div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-200 dark:border-zinc-700 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+<img alt="Google Logo" class="w-5 h-5" data-alt="Google logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRDPYKZrBCre69WtVNmp3LYJtnmvfoGj20tu7RGh0qqxy5qoJjg9-LNY6QhhawmuYAxogy6Bq1srz1NoSjhYgtvdoP93jOabRUeH_B73vra52PqH7g0eUsmU6WJnW1GHx3WkRpzQ-UNaFFOcWdkLP3Ia987lXLE55JztSPSMf8DYHwjkssyGhlvArQV7sljj0WQqtaVNnV_5lXpbxrFIvxYQbdbYvS6ciWaFcNmAwXbflbDAcIrJuxOMNSfdULiti2yjWNl0XhyA"/>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">Google</span>
+</button>
+<button class="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-200 dark:border-zinc-700 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+<span class="material-symbols-outlined text-[#0077B5]">account_circle</span>
+<span class="text-sm font-medium text-gray-700 dark:text-gray-300">LinkedIn</span>
+</button>
+</div>
+</div>
+<!-- Footer Section -->
+<div class="bg-gray-50 dark:bg-zinc-800/50 p-6 text-center border-t border-gray-100 dark:border-zinc-800">
+<p class="text-sm text-gray-600 dark:text-gray-400">
+                    Don't have an account? 
+                    <a class="text-primary font-bold hover:underline" href="#">Sign up for free</a>
+</p>
+</div>
+</div>
+<!-- Academic/Professional context footer -->
+<footer class="mt-12 text-center max-w-lg">
+<p class="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-widest font-bold mb-4">Official Platform for Smart Supply Chain Management</p>
+<div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-500 dark:text-gray-500">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Cookie Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Academic Licensing</a>
+</div>
+<p class="mt-6 text-xs text-gray-400">© 2024 Smart Grocery Systems. All rights reserved.</p>
+</footer>
+</main>
+<!-- Background Decoration -->
+<div class="fixed top-0 right-0 -z-10 opacity-20 dark:opacity-5 pointer-events-none">
+<svg fill="none" height="400" viewbox="0 0 400 400" width="400" xmlns="http://www.w3.org/2000/svg">
+<circle cx="300" cy="100" fill="url(#paint0_linear)" r="150"></circle>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="paint0_linear" x1="150" x2="300" y1="100" y2="250">
+<stop stop-color="#13ec13"></stop>
+<stop offset="1" stop-color="#13ec13" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<div class="fixed bottom-0 left-0 -z-10 opacity-20 dark:opacity-5 pointer-events-none">
+<svg fill="none" height="300" viewbox="0 0 300 300" width="300" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="250" fill="url(#paint1_linear)" r="120"></circle>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="paint1_linear" x1="-70" x2="50" y1="130" y2="250">
+<stop stop-color="#13ec13"></stop>
+<stop offset="1" stop-color="#13ec13" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</body></html>

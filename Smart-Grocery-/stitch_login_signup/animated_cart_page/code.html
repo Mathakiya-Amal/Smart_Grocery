@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cart Page - Smart Grocery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec13",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .cart-item-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cart-item-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .btn-scale {
+            transition: transform 0.1s ease;
+        }
+        .btn-scale:active {
+            transform: scale(0.9);
+        }
+        .btn-scale:hover {
+            transform: scale(1.1);
+        }
+    </style></head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex flex-col min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="p-1.5 bg-primary rounded-lg">
+<span class="material-symbols-outlined text-white block">shopping_basket</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">Smart Grocery</h2>
+</div>
+<div class="hidden md:block">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="block w-64 pl-10 pr-3 py-2 border-none bg-slate-100 dark:bg-slate-800 rounded-lg text-sm placeholder-slate-500 focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Search groceries..." type="text"/>
+</div>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors transition-all duration-200" href="#">Shop</a>
+<a class="text-sm font-medium hover:text-primary transition-colors transition-all duration-200" href="#">Categories</a>
+<a class="text-sm font-medium hover:text-primary transition-colors transition-all duration-200" href="#">Deals</a>
+<a class="text-sm font-medium hover:text-primary transition-colors transition-all duration-200" href="#">Orders</a>
+</nav>
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors relative transition-all duration-200">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute top-1 right-1 w-4 h-4 bg-primary text-[10px] font-bold text-white flex items-center justify-center rounded-full">4</span>
+</button>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors transition-all duration-200">
+<span class="material-symbols-outlined">person</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden ml-2">
+<img class="w-full h-full object-cover" data-alt="User profile picture of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApMxQZCu9nYygZ56gk9Pjn70IpxYt-KtVzpFqXd_nQQrtxMlc8RUlCZSRm7SM8QDNuaHQuVpdKDDA-9tPDuM39QxQgmmxQadWu0wR9SDYpP-iIlARDzMN39ZxOSCblwABBayEULZZ0fOjkfvTjwcFx8vkz8mRZcD9sD-xsc78-Xgn2slYY4czhHvJIDXD1njyYGkcg1sCk6NWrFtYvqTk6Pa0-E5Ex5dYxwTm8WpqrBjQP0oaWdlvRDNKJVnNt1mYxCetV5sJM9g"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-6">
+<a class="hover:text-primary transition-all duration-200" href="#">Home</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-all duration-200" href="#">Shop</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-slate-900 dark:text-slate-100">Cart</span>
+</nav>
+<div class="mb-8">
+<h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">Your Shopping Cart</h1>
+<p class="text-slate-500 mt-1">Review your items and select quantities before checking out.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Cart Items List (Column 1 & 2) -->
+<div class="lg:col-span-2 space-y-4">
+<div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+<th class="px-6 py-4">Product</th>
+<th class="px-6 py-4">Details</th>
+<th class="px-6 py-4 text-center">Quantity</th>
+<th class="px-6 py-4 text-right">Price</th>
+<th class="px-6 py-4 text-center">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<!-- Item 1 -->
+<tr class="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors cart-item-hover">
+<td class="px-6 py-5">
+<div class="w-16 h-16 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Fresh yellow organic bananas bunch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCScwWfbmXLFGMdUNKVfh-QyQpVkv0pbKsWjPK61LwhcDZv210VxyxvbQ9eVFewXVz4E8Xx-k0-cCo5vMTsyrooARWL7CporpXsKOsr8eGNhRkv84K_VTtj8ZncjgPFjoJVjdwIzNPOWGWC1aGAOjV6EZs8NXt4m_4VoUxpN4DaEgMl9WUyWmQKA1rOv5uQjfuGOxxvJoZb72AvNRRCXixtUG2hu3nr7CpaCT-Xi_82ctU0NsqXYhtc7GCltP3Xb8xurkNy5-JG7A"/>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-bold text-slate-900 dark:text-slate-100">Fresh Organic Bananas</p>
+<p class="text-xs text-slate-500">1kg Bundle</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center justify-center gap-3 bg-slate-100 dark:bg-slate-800 w-fit mx-auto rounded-lg px-2 py-1">
+<button class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white dark:hover:bg-slate-700 rounded transition-all btn-scale transition-all duration-200">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<span class="font-bold text-sm min-w-[20px] text-center">1</span>
+<button class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white dark:hover:bg-slate-700 rounded transition-all btn-scale transition-all duration-200">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-slate-900 dark:text-slate-100">
+                                        $2.99
+                                    </td>
+<td class="px-6 py-5 text-center">
+<button class="text-slate-400 hover:text-red-500 transition-colors transition-all duration-200">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</td>
+</tr>
+<!-- Item 2 -->
+<tr class="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors cart-item-hover">
+<td class="px-6 py-5">
+<div class="w-16 h-16 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Whole wheat sliced bread loaf" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjFTw8BUVUml1Iv3htz9-8JauZqa_k2PLO71b_dfGvYPe6wnBF5QqnwY0wmbJVY_Ibp66ssYm1T6krEpXurfaOviytdskNtPyJ3SZr_SM9PM-wAPx8lZrp5NQI-uvTUskzvBtnf8aFC1bkHuDDi_PCv5CFUX9fVcoqTcfpZNBtWhgtcFxVUOaQtOTgavAKF8TH-l2AssA91Kzl4gZo2eHiF-8DM1ZpoV1eOU4OTW9tGiFlieKXR63TY8lRDfN63BTqRaApuwJO4Q"/>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-bold text-slate-900 dark:text-slate-100">Whole Wheat Bread</p>
+<p class="text-xs text-slate-500">Artisan Sliced (400g)</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center justify-center gap-3 bg-slate-100 dark:bg-slate-800 w-fit mx-auto rounded-lg px-2 py-1">
+<button class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white dark:hover:bg-slate-700 rounded transition-all btn-scale transition-all duration-200">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<span class="font-bold text-sm min-w-[20px] text-center">2</span>
+<button class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white dark:hover:bg-slate-700 rounded transition-all btn-scale transition-all duration-200">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-slate-900 dark:text-slate-100">
+                                        $11.00
+                                    </td>
+<td class="px-6 py-5 text-center">
+<button class="text-slate-400 hover:text-red-500 transition-colors transition-all duration-200">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</td>
+</tr>
+<!-- Item 3 -->
+<tr class="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors cart-item-hover">
+<td class="px-6 py-5">
+<div class="w-16 h-16 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Almond milk carton 1 litre" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ09S_WD5sBHmiab84QTH3jFRdv3TBl5YKj-SW7o50V7HlhVDykdGLmKgMGMplFXFMvF767YdNwDY0PQyd0tNNOGw_6Vp6sfJWVGHhOLxYjqFEVSsbdC9zOXYjc2nxbX9jH34V8fb_-SSrOYZYeV8yBhXLXKTKz7qRneOdduWqCXRyB6qV6mKOXssU28bru078XwT72F6fTp2kaeiLxWbWMjIWwBypS-kGGZ-_RaOP2u_HWKi8lcKLJo0pzbifN8FncQhJd3-Y4A"/>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-bold text-slate-900 dark:text-slate-100">Almond Milk 1L</p>
+<p class="text-xs text-slate-500">Unsweetened, Vanilla</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center justify-center gap-3 bg-slate-100 dark:bg-slate-800 w-fit mx-auto rounded-lg px-2 py-1">
+<button class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white dark:hover:bg-slate-700 rounded transition-all btn-scale transition-all duration-200">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<span class="font-bold text-sm min-w-[20px] text-center">1</span>
+<button class="w-7 h-7 flex items-center justify-center text-primary hover:bg-white dark:hover:bg-slate-700 rounded transition-all btn-scale transition-all duration-200">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-slate-900 dark:text-slate-100">
+                                        $4.25
+                                    </td>
+<td class="px-6 py-5 text-center">
+<button class="text-slate-400 hover:text-red-500 transition-colors transition-all duration-200">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-6 bg-slate-50/50 dark:bg-slate-800/50 flex justify-between items-center">
+<button class="flex items-center gap-2 text-sm font-semibold text-primary hover:underline transition-all duration-200 hover:translate-x-[-4px]">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                                Continue Shopping
+                            </button>
+<p class="text-xs text-slate-400 font-medium">Items in cart are held for 60 minutes</p>
+</div>
+</div>
+<!-- Additional Offers (Optional UI enhancement) -->
+<div class="p-6 border-2 border-dashed border-primary/30 rounded-xl bg-primary/5 flex items-center justify-between animate-float">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">redeem</span>
+<div>
+<p class="font-bold text-slate-900 dark:text-slate-100 text-sm">Add $12.01 more to get Free Delivery!</p>
+<p class="text-xs text-slate-500">Free delivery on orders above $30.00</p>
+</div>
+</div>
+<button class="bg-primary/20 text-primary px-4 py-2 rounded-lg text-xs font-bold hover:bg-primary hover:text-white transition-all transition-all duration-200">Browse More</button>
+</div>
+</div>
+<!-- Bill Summary Card (Column 3) -->
+<div class="lg:col-span-1">
+<div class="sticky top-24 bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-right-4 duration-700">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Bill Summary</h3>
+</div>
+<div class="p-6 space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500">Items (4)</span>
+<span class="font-medium">$18.24</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500 flex items-center gap-1">
+                                    Delivery Fee
+                                    <span class="material-symbols-outlined text-[14px] cursor-help" title="Standard delivery fee for your area">info</span>
+</span>
+<span class="font-medium">$5.00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500">Estimated Tax (5%)</span>
+<span class="font-medium">$0.91</span>
+</div>
+<div class="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-center">
+<span class="text-lg font-bold text-slate-900 dark:text-slate-100">Grand Total</span>
+<span class="text-2xl font-black text-primary">$24.15</span>
+</div>
+<p class="text-[11px] text-slate-400 mt-1">Inclusive of all local taxes and service fees.</p>
+</div>
+<div class="space-y-3 pt-4">
+<button class="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-95">
+<span>Proceed to Checkout</span>
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+<div class="flex items-center justify-center gap-4 text-slate-400 pt-2">
+<span class="material-symbols-outlined" title="Secure Payment">verified_user</span>
+<span class="material-symbols-outlined" title="Credit Cards accepted">credit_card</span>
+<span class="material-symbols-outlined" title="Apple Pay">contactless</span>
+</div>
+</div>
+</div>
+<!-- Promo Code Section -->
+<div class="p-6 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800">
+<label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Have a promo code?</label>
+<div class="flex gap-2">
+<input class="flex-1 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-sm px-3 focus:ring-1 focus:ring-primary" placeholder="Enter code" type="text"/>
+<button class="bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition-all transition-all duration-200 hover:bg-slate-300 dark:hover:bg-slate-600 active:scale-95">Apply</button>
+</div>
+</div>
+</div>
+<div class="mt-6 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-500">local_shipping</span>
+<div class="text-xs">
+<p class="font-bold text-slate-900 dark:text-slate-100">Smart Delivery</p>
+<p class="text-slate-500 leading-relaxed">Estimated delivery within 30-45 minutes. You'll receive a tracking link via SMS.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Simple Footer -->
+<footer class="mt-12 py-8 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-2 grayscale opacity-50">
+<span class="material-symbols-outlined text-xl">shopping_basket</span>
+<span class="text-sm font-bold">Smart Grocery</span>
+</div>
+<div class="flex gap-6 text-sm text-slate-500">
+<a class="hover:text-primary transition-all duration-200" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-all duration-200" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-all duration-200" href="#">Refund Policy</a>
+<a class="hover:text-primary transition-all duration-200" href="#">Help Center</a>
+</div>
+<p class="text-sm text-slate-400">© 2024 Smart Grocery Inc.</p>
+</div>
+</footer>
+</div>
+</body></html>
